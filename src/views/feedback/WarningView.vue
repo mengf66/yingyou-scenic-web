@@ -129,12 +129,12 @@ const overall = computed(() => {
 const gaugeOption = computed(() => ({
   series: [{
     type: 'gauge', min: 0, max: 100, radius: '92%', center: ['50%', '58%'],
-    axisLine: { lineStyle: { width: 16, color: [[0.35, '#409eff'], [0.55, '#e6c229'], [0.75, '#ff9f43'], [1, '#f56c6c']] } },
+    axisLine: { lineStyle: { width: 16, color: [[0.35, '#4a7aa8'], [0.55, '#c9a227'], [0.75, '#d97a34'], [1, '#c2413a']] } },
     pointer: { width: 5, itemStyle: { color: 'auto' } },
     axisTick: { distance: -16, length: 6, lineStyle: { color: '#fff' } },
     splitLine: { distance: -16, length: 16, lineStyle: { color: '#fff', width: 2 } },
-    axisLabel: { distance: 20, fontSize: 10, color: '#8a94a6' },
-    detail: { valueAnimation: true, fontSize: 26, offsetCenter: [0, '62%'], color: 'inherit', formatter: v => `${v}\n{a|${riskLevel(v).color}}`, rich: { a: { fontSize: 13, color: '#8a94a6', padding: [6, 0, 0, 0] } } },
+    axisLabel: { distance: 20, fontSize: 10, color: '#8f857b' },
+    detail: { valueAnimation: true, fontSize: 26, offsetCenter: [0, '62%'], color: 'inherit', formatter: v => `${v}\n{a|${riskLevel(v).color}}`, rich: { a: { fontSize: 13, color: '#8f857b', padding: [6, 0, 0, 0] } } },
     data: [{ value: overall.value }]
   }]
 }))
@@ -190,23 +190,36 @@ async function publishWarning(c) {
   margin-bottom: 14px;
 }
 .card {
-  background: #fff;
-  border-radius: 8px;
-  padding: 14px 16px;
-  box-shadow: 0 1px 4px rgba(15, 35, 80, 0.06);
+  position: relative;
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 2px rgba(80, 60, 30, 0.04), 0 4px 14px rgba(80, 60, 30, 0.04);
 }
 .card-title {
-  font-weight: 600;
-  color: #1f2d3d;
-  padding-left: 8px;
-  border-left: 3px solid #3b7ad9;
-  line-height: 1;
-  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-family: var(--font-title);
+  font-size: 17px;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  color: var(--mo);
+}
+.card-title::before {
+  content: '';
+  flex-shrink: 0;
+  width: 4px;
+  height: 16px;
+  border-radius: 1px;
+  background: linear-gradient(180deg, var(--zhu), var(--zhu-deep));
 }
 .gauge-tip {
   text-align: center;
   font-size: 12px;
-  color: #a0a8b8;
+  color: #a39a8f;
 }
 .lv-grid {
   display: grid;
@@ -228,21 +241,21 @@ async function publishWarning(c) {
 }
 .lv-name {
   font-size: 13px;
-  color: #1f2d3d;
+  color: #2a2522;
 }
 .lv-sub {
   font-size: 11px;
-  color: #8a94a6;
+  color: #8f857b;
 }
 .model {
   font-size: 13px;
-  color: #5a6477;
+  color: #5c534c;
 }
 .formula {
-  background: #f4f7fd;
+  background: #f7f1e6;
   border-radius: 6px;
   padding: 10px;
-  color: #2a5bac;
+  color: #962c23;
   font-weight: 600;
   margin: 10px 0;
 }
@@ -252,7 +265,7 @@ async function publishWarning(c) {
   line-height: 1.9;
 }
 .note {
-  color: #a0a8b8;
+  color: #a39a8f;
   font-size: 12px;
   margin: 8px 0 0;
 }
@@ -274,7 +287,7 @@ async function publishWarning(c) {
   gap: 12px;
 }
 .cluster {
-  border: 1px solid #e8edf5;
+  border: 1px solid #ece3d3;
   border-left: 4px solid var(--c);
   border-radius: 6px;
   padding: 12px 14px;
@@ -289,12 +302,12 @@ async function publishWarning(c) {
 }
 .c-title {
   font-weight: 600;
-  color: #1f2d3d;
+  color: #2a2522;
 }
 .c-risk {
   margin-left: auto;
   font-size: 13px;
-  color: #8a94a6;
+  color: #8f857b;
 }
 .c-risk b {
   font-size: 20px;
@@ -305,21 +318,23 @@ async function publishWarning(c) {
   flex-wrap: wrap;
   gap: 14px;
   font-size: 12px;
-  color: #8a94a6;
+  color: #8f857b;
   margin: 8px 0 6px;
 }
 .kw {
   display: inline-block;
-  padding: 0 6px;
+  padding: 0 7px;
   margin: 2px 4px 2px 0;
   font-size: 12px;
-  border-radius: 3px;
-  background: #eef4ff;
-  color: #3b7ad9;
+  line-height: 20px;
+  border-radius: 2px;
+  background: #f3ece0;
+  color: #7a5a2e;
+  border: 1px solid #e6d8bf;
 }
 .c-sample {
   font-size: 13px;
-  color: #5a6477;
+  color: #5c534c;
   margin: 6px 0 10px;
   line-height: 1.6;
 }

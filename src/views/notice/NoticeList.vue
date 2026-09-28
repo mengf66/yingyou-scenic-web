@@ -70,7 +70,7 @@
           <el-form-item label="发布渠道" prop="channels" class="channels">
             <div class="ch-group">
               <el-checkbox :model-value="editor.form.channels.tourist.length > 0" :indeterminate="editor.form.channels.tourist.length === 1" @change="v => (editor.form.channels.tourist = v ? ['banner', 'message'] : [])">
-                <el-tag size="small">游客端</el-tag>
+                <el-tag size="small" type="danger" effect="dark">游客端</el-tag>
               </el-checkbox>
               <el-checkbox-group v-model="editor.form.channels.tourist" class="sub">
                 <el-checkbox value="banner">首页Banner</el-checkbox>
@@ -79,7 +79,7 @@
             </div>
             <div class="ch-group">
               <el-checkbox :model-value="editor.form.scenic.length > 0" :indeterminate="editor.form.scenic.length > 0 && editor.form.scenic.length < SCENICS.length" @change="v => (editor.form.scenic = v ? [...SCENICS] : [])">
-                <el-tag size="small" type="success">景区管辖区</el-tag>
+                <el-tag size="small" type="success" effect="dark">景区管辖区</el-tag>
               </el-checkbox>
               <el-checkbox-group v-model="editor.form.scenic" class="sub">
                 <el-checkbox v-for="s in SCENICS" :key="s" :value="s">{{ s }}</el-checkbox>
@@ -87,7 +87,7 @@
             </div>
             <div class="ch-group">
               <el-checkbox :model-value="editor.form.channels.social.length > 0" :indeterminate="editor.form.channels.social.length === 1" @change="v => (editor.form.channels.social = v ? ['wechat', 'douyin'] : [])">
-                <el-tag size="small" type="warning">社交平台</el-tag>
+                <el-tag size="small" type="warning" effect="dark">社交平台</el-tag>
               </el-checkbox>
               <el-checkbox-group v-model="editor.form.channels.social" class="sub">
                 <el-checkbox value="wechat">微信公众号</el-checkbox>
@@ -214,10 +214,11 @@ onMounted(load)
 
 <style scoped>
 .panel {
-  background: #fff;
-  border-radius: 8px;
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  border-radius: 6px;
   padding: 20px 24px;
-  box-shadow: 0 1px 4px rgba(15, 35, 80, 0.06);
+  box-shadow: 0 1px 2px rgba(80, 60, 30, 0.04), 0 4px 14px rgba(80, 60, 30, 0.04);
 }
 .panel-head {
   display: flex;
@@ -225,13 +226,26 @@ onMounted(load)
   align-items: flex-start;
 }
 .panel-head h3 {
-  margin: 0 0 4px;
-  font-size: 18px;
-  color: #1f2d3d;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 6px;
+  font-family: var(--font-title);
+  font-size: 20px;
+  font-weight: normal;
+  letter-spacing: 2px;
+  color: var(--mo);
+}
+.panel-head h3::before {
+  content: '';
+  width: 4px;
+  height: 18px;
+  border-radius: 1px;
+  background: linear-gradient(180deg, var(--zhu), var(--zhu-deep));
 }
 .desc {
   margin: 0;
-  color: #8a94a6;
+  color: #8f857b;
   font-size: 13px;
 }
 .filters {
@@ -242,7 +256,7 @@ onMounted(load)
 }
 .count {
   margin-left: auto;
-  color: #8a94a6;
+  color: #8f857b;
   font-size: 13px;
 }
 .list {
@@ -251,11 +265,14 @@ onMounted(load)
 .item {
   display: flex;
   gap: 20px;
-  padding: 16px 4px;
-  border-bottom: 1px solid #eef1f6;
+  padding: 16px 12px;
+  margin: 0 -12px;
+  border-bottom: 1px dashed #e6dccb;
+  border-radius: 4px;
+  transition: background 0.15s;
 }
 .item:hover {
-  background: #fafcff;
+  background: #fbf6ec;
 }
 .item-main {
   flex: 1;
@@ -268,12 +285,13 @@ onMounted(load)
 }
 .item-title .t {
   font-weight: 600;
-  color: #1f2d3d;
+  letter-spacing: 0.5px;
+  color: #2a2522;
   font-size: 15px;
 }
 .item-content {
   margin: 8px 0;
-  color: #5a6477;
+  color: #5c534c;
   font-size: 13px;
   line-height: 1.6;
   display: -webkit-box;
@@ -288,7 +306,7 @@ onMounted(load)
   width: 200px;
   text-align: right;
   font-size: 12px;
-  color: #8a94a6;
+  color: #8f857b;
 }
 .ops {
   margin-bottom: 8px;
@@ -308,8 +326,9 @@ onMounted(load)
   display: block;
 }
 .ch-group {
-  border: 1px solid #e4e9f2;
-  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: #fcf9f3;
+  border-radius: 4px;
   padding: 6px 12px;
   margin-bottom: 8px;
 }
@@ -325,7 +344,7 @@ onMounted(load)
   justify-content: space-between;
   align-items: center;
   font-size: 13px;
-  color: #5a6477;
+  color: #5c534c;
   margin-bottom: 10px;
 }
 .themes {
@@ -345,9 +364,9 @@ onMounted(load)
   border: 2px solid transparent;
 }
 .swatch.on {
-  border-color: #409eff;
+  border-color: var(--zhu);
 }
-.swatch.blue { background: linear-gradient(135deg, #3a64c8, #6f8fe0); }
+.swatch.blue { background: linear-gradient(135deg, #2b3a4a, #4f6780); }
 .swatch.gold { background: linear-gradient(135deg, #d9a33a, #f3cf6a); }
 .swatch.beige { background: linear-gradient(135deg, #e8dcc2, #f6efe0); }
 .phone {
@@ -362,11 +381,12 @@ onMounted(load)
 .phone-bar {
   text-align: center;
   padding: 10px 0;
-  font-weight: 600;
-  letter-spacing: 2px;
+  font-family: var(--font-title);
+  font-size: 15px;
+  letter-spacing: 3px;
   color: #fff;
 }
-.phone.blue .phone-bar { background: #3456a8; }
+.phone.blue .phone-bar { background: #2b3a4a; }
 .phone.gold .phone-bar { background: #c8872a; }
 .phone.beige .phone-bar { background: #a88b5a; }
 .phone-body {
@@ -374,7 +394,7 @@ onMounted(load)
   padding: 10px;
   overflow-y: auto;
 }
-.phone.blue .phone-body { background: linear-gradient(180deg, #e8eefc, #f6f8fe); }
+.phone.blue .phone-body { background: linear-gradient(180deg, #e9edf1, #f6f7f9); }
 .phone.gold .phone-body { background: linear-gradient(180deg, #7a6a55, #a8906a); }
 .phone.beige .phone-body { background: linear-gradient(180deg, #f5ecd9, #fbf7ee); }
 .banner {
@@ -382,7 +402,7 @@ onMounted(load)
   padding: 10px;
   margin-bottom: 8px;
   color: #fff;
-  background: linear-gradient(135deg, rgba(52, 86, 168, 0.95), rgba(95, 130, 220, 0.9));
+  background: linear-gradient(135deg, rgba(43, 58, 74, 0.95), rgba(79, 103, 128, 0.92));
 }
 .phone.gold .banner { background: linear-gradient(135deg, rgba(90, 70, 50, 0.9), rgba(140, 110, 70, 0.9)); }
 .phone.beige .banner { background: linear-gradient(135deg, #b89461, #d4b27c); }
@@ -390,7 +410,7 @@ onMounted(load)
   font-size: 10px;
   padding: 1px 6px;
   border-radius: 3px;
-  background: #e6a23c;
+  background: #c9892f;
 }
 .b-title {
   font-weight: 700;
@@ -417,7 +437,7 @@ onMounted(load)
   color: #333;
 }
 .msg-ico {
-  color: #e6a23c;
+  color: #c9892f;
   margin-top: 2px;
 }
 .m-title {
@@ -456,7 +476,7 @@ onMounted(load)
 .preview-tip {
   text-align: center;
   font-size: 12px;
-  color: #8a94a6;
+  color: #8f857b;
   margin: 8px 0 0;
 }
 </style>

@@ -1,62 +1,72 @@
 <template>
-  <div class="analysis2-container">
-    <!-- 左侧：舆情统计概览 -->
-    <div class="container container-left">
-      <div class="title-box">
-        <h3>舆情统计概览</h3>
-      </div>
-      <div class="stats-container">
-        <div v-for="(item, index) in publicOpinionStats" :key="index" class="stat-item">
-          <div class="stat-title">{{ item.title }}</div>
-          <div class="stat-value">{{ item.value }}</div>
-          <div :class="['stat-compare', item.trend]">
-            <span class="icon">{{ item.trend === 'up' ? '↑' : '↓' }}</span>
-            {{ item.rate }}%
+  <div class="screen-grid">
+    <!-- 左：舆情统计 -->
+    <div class="col left">
+      <ScreenPanel title="舆情统计概览" class="stats-panel">
+        <div class="stats-container">
+          <div v-for="(item, index) in publicOpinionStats" :key="index" class="stat-item">
+            <div class="stat-title">{{ item.title }}</div>
+            <div class="stat-value">{{ item.value }}</div>
+            <div :class="['stat-compare', item.trend]">
+              {{ item.trend === 'up' ? '▲' : '▼' }} {{ item.rate }}%
+            </div>
           </div>
         </div>
-      </div>
+      </ScreenPanel>
+      <ScreenPanel title="情感倾向" sub="BERT 情感分析" class="r-sent">
+        <BaseChart :option="sentimentOption" />
+      </ScreenPanel>
     </div>
 
-    <!-- 右侧：热门舆情信息 -->
-    <div class="container container-right">
-      <div class="title-box">
-        <h3>热门舆情信息</h3>
-        <button class="wordcloud-btn" @click="showWordCloud">词云分析</button>
-      </div>
-      <div class="comments-grid">
-        <div
-            v-for="(comment, index) in hotComments"
-            :key="index"
-            :class="['comment-card', getCommentColor(index)]"
-        >
-          <div class="user-info">
-            <span class="username">{{ comment.user }}</span>
-            <span class="time">{{ comment.time }}</span>
+    <!-- 中：词云 + 趋势 -->
+    <div class="col">
+      <ScreenPanel title="舆情词云" sub="近 30 日高频话题" class="r-cloud">
+        <BaseChart :option="wordCloudOption" />
+      </ScreenPanel>
+      <ScreenPanel title="舆情趋势" sub="近 14 日 · 正面 / 负面" class="r-trend">
+        <BaseChart :option="trendOption" />
+      </ScreenPanel>
+    </div>
+
+    <!-- 右：热门舆情 -->
+    <div class="col">
+      <ScreenPanel title="热门舆情信息" sub="实时抓取 · 按热度排序" class="r-comments">
+        <div class="comments">
+          <div v-for="(comment, index) in hotComments" :key="index" :class="['comment', toneOf(comment.content)]">
+            <div class="c-head">
+              <span class="c-rank">{{ String(index + 1).padStart(2, '0') }}</span>
+              <span class="username">{{ comment.user }}</span>
+              <span class="tone">{{ { pos: '好评', neg: '待改进', neu: '建议' }[toneOf(comment.content)] }}</span>
+              <span class="time">{{ comment.time }}</span>
+            </div>
+            <div class="comment-content">{{ comment.content }}</div>
           </div>
-          <div class="comment-content">{{ comment.content }}</div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 词云弹窗 -->
-  <div v-if="showModal" class="modal-mask">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>舆情词云分析</h3>
-        <button class="close-btn" @click="closeModal">×</button>
-      </div>
-      <div id="wordcloud-chart" style="width: 800px; height: 500px;"></div>
+      </ScreenPanel>
+      <ScreenPanel title="热点话题榜" sub="提及量 · 环比" class="r-topics">
+        <div class="topics">
+          <div v-for="(t, i) in topics" :key="t.name" class="topic">
+            <span :class="['t-rank', { top: i < 3 }]">{{ i + 1 }}</span>
+            <span class="t-name">{{ t.name }}</span>
+            <div class="t-bar"><i :style="{ width: (t.value / topics[0].value) * 100 + '%' }"></i></div>
+            <span class="t-num">{{ t.value }}</span>
+            <span :class="['t-trend', t.trend > 0 ? 'up' : 'down']">{{ t.trend > 0 ? '▲' : '▼' }}{{ Math.abs(t.trend) }}%</span>
+          </div>
+        </div>
+      </ScreenPanel>
     </div>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
-import * as echarts from 'echarts'
+import { ref, computed } from 'vue'
 import 'echarts-wordcloud'
+import BaseChart from './BaseChart.vue'
+import ScreenPanel from './screen/ScreenPanel.vue'
+import { C, PALETTE, axis, tooltip, legend } from './screen/theme'
 
 export default {
+  components: { BaseChart, ScreenPanel },
   setup() {
     // 舆情统计数据
     const publicOpinionStats = ref([
@@ -102,9 +112,6 @@ export default {
       }
     ])
 
-    const showModal = ref(false)
-    const chartInstance = ref(null)
-
     // 词云数据
     const wordCloudData = ref([
       { name: '景区服务', value: 150 },
@@ -129,262 +136,272 @@ export default {
       { name: '游客中心', value: 52 }
     ])
 
-    const initWordCloud = () => {
-      const chartDom = document.getElementById('wordcloud-chart')
-      chartInstance.value = echarts.init(chartDom)
-      const option = {
-        tooltip: {},
-        series: [{
-          type: 'wordCloud',
-          shape: 'cardioid',
-          sizeRange: [10, 10],
-          rotationRange: [-45, 45],
-          gridSize: 8,
-          drawOutOfBound: true,
-          textStyle: {
-            color: () => {
-              return 'rgb(' + [
-                Math.round(Math.random() * 160 + 95),
-                Math.round(Math.random() * 160 + 95),
-                Math.round(Math.random() * 160 + 95)
-              ].join(',') + ')'
-            }
-          },
-          emphasis: {
-            focus: 'self',
-            textStyle: {
-              shadowBlur: 10,
-              shadowColor: '#333'
-            }
-          },
-          data: wordCloudData.value.sort((a, b) => b.value - a.value)
-        }]
-      }
-      chartInstance.value.setOption(option)
-    }
+    // 原词云 sizeRange 为 [10, 10]，所有词一样大，看不出热度差异；这里按热度放大
+    const wordCloudOption = computed(() => ({
+      tooltip: tooltip(),
+      series: [{
+        type: 'wordCloud',
+        shape: 'circle',
+        width: '96%',
+        height: '96%',
+        left: 'center',
+        top: 'center',
+        sizeRange: [16, 68],
+        rotationRange: [0, 0],
+        gridSize: 12,
+        drawOutOfBound: false,
+        textStyle: {
+          fontFamily: 'JinTitle, STKaiti, KaiTi, serif',
+          color: p => (p.dataIndex < 4 ? C.goldLight : PALETTE[p.dataIndex % PALETTE.length])
+        },
+        emphasis: { focus: 'self', textStyle: { textShadowBlur: 12, textShadowColor: C.gold } },
+        data: [...wordCloudData.value].sort((a, b) => b.value - a.value)
+      }]
+    }))
 
-    const showWordCloud = () => {
-      showModal.value = true
-      setTimeout(initWordCloud, 0)
-    }
+    // 情感倾向（与景区端「接收反馈」同口径的示例数据）
+    const sentimentOption = computed(() => ({
+      tooltip: tooltip({ trigger: 'item', formatter: '{b}：{d}%' }),
+      legend: legend({ bottom: 0, left: 'center' }),
+      color: [C.jade, C.azure, C.cinnabar],
+      series: [{
+        type: 'pie',
+        radius: ['48%', '70%'],
+        center: ['50%', '44%'],
+        label: { show: true, position: 'center', formatter: '正面\n{a|68%}', color: C.text2, fontSize: 12, rich: { a: { fontSize: 22, color: C.goldLight, fontWeight: 600, padding: [4, 0, 0, 0] } } },
+        emphasis: { label: { show: true, formatter: '{b}\n{a|{d}%}' } },
+        labelLine: { show: false },
+        itemStyle: { borderColor: '#101d3f', borderWidth: 3 },
+        data: [
+          { name: '正面', value: 68 },
+          { name: '中性', value: 21 },
+          { name: '负面', value: 11 }
+        ]
+      }]
+    }))
 
-    const closeModal = () => {
-      showModal.value = false
-      if (chartInstance.value) {
-        chartInstance.value.dispose()
-      }
-    }
+    const days = [...Array(14)].map((_, i) => {
+      const d = new Date(Date.now() - (13 - i) * 86400000)
+      return `${d.getMonth() + 1}/${d.getDate()}`
+    })
+    const POS = [1820, 1960, 1750, 2100, 2380, 2610, 2290, 1980, 2050, 2240, 2460, 2720, 2530, 2380]
+    const NEG = [210, 260, 190, 240, 330, 410, 300, 220, 250, 280, 310, 360, 290, 270]
+    const trendOption = computed(() => ({
+      tooltip: tooltip({ trigger: 'axis' }),
+      legend: legend({ top: 0, right: 0, icon: 'circle' }),
+      grid: { top: 28, bottom: 4, left: 4, right: 10, containLabel: true },
+      xAxis: axis({ type: 'category', boundaryGap: false, data: days }),
+      yAxis: axis({ type: 'value', axisLine: { show: false } }),
+      series: [
+        {
+          name: '正面', type: 'line', smooth: true, showSymbol: false, data: POS,
+          lineStyle: { color: C.gold, width: 2 }, itemStyle: { color: C.gold },
+          areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(217,179,106,0.35)' }, { offset: 1, color: 'rgba(217,179,106,0)' }] } }
+        },
+        {
+          name: '负面', type: 'line', smooth: true, showSymbol: false, data: NEG,
+          lineStyle: { color: C.cinnabar, width: 2 }, itemStyle: { color: C.cinnabar },
+          areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(217,96,76,0.3)' }, { offset: 1, color: 'rgba(217,96,76,0)' }] } }
+        }
+      ]
+    }))
+
+    // 简单判断评论语气，用于卡片着色：有转折/抱怨 → 待改进；纯夸赞 → 好评；其余为建议
+    const toneOf = text => (/(但|不过|紧张|迷路|需要扩建)/.test(text) ? 'neg' : /(建议|希望)/.test(text) ? 'neu' : 'pos')
+
+    // 热点话题：取词云前 6 个话题
+    const TREND = [18, 12, -4, 9, 6, -2]
+    const topics = computed(() => [...wordCloudData.value].sort((a, b) => b.value - a.value).slice(0, 6).map((t, i) => ({ ...t, trend: TREND[i] })))
 
     return {
       publicOpinionStats,
       hotComments,
-      showModal,
-      showWordCloud,
-      closeModal
-    }
-  },
-  methods: {
-    // 评论卡片按 2x2 棋盘格交替蓝/绿
-    getCommentColor(index) {
-      const row = Math.floor(index / 2)
-      const isEven = index % 2 === 0
-      return row % 2 === 0 ? (isEven ? 'blue' : 'green') : (isEven ? 'green' : 'blue')
+      wordCloudOption,
+      sentimentOption,
+      trendOption,
+      toneOf,
+      topics
     }
   }
 }
 </script>
 
 <style scoped>
-.analysis2-container {
-  display: flex;
-  height: calc(90vh - 80px);
-  background: url('../assets/background.png');
-  padding: 20px;
-  gap: 20px;
+.screen-grid {
+  display: grid;
+  grid-template-columns: 0.8fr 1.5fr 1.1fr;
+  gap: 14px;
+  height: 100%;
+  min-height: 0;
 }
-
-.container {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border-radius: 8px;
-  padding: 15px;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
-.container-left {
-  width: 16.66%;
-  min-width: 280px;
-}
-
-.container-right {
-  width: 83.34%;
-}
-
-.title-box {
-  background: rgba(0, 0, 0, 0.3);
-  padding: 12px 20px;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  margin-bottom: 20px;
-  position: relative;
-}
-
-.title-box h3 {
-  color: #7db2ff;
-  margin: 0;
-  font-size: 16px;
-  letter-spacing: 1px;
-}
-
-.stats-container {
+.col {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 14px;
+  min-height: 0;
+  min-width: 0;
+}
+.stats-panel { flex: 4; }
+.r-sent { flex: 4; }
+.r-cloud { flex: 6; }
+.r-trend { flex: 4; }
+.r-comments { flex: 6; }
+.r-topics { flex: 4; }
+
+.stats-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: 1fr;
+  gap: 10px;
+  height: 100%;
 }
 
 .stat-item {
-  background: rgba(255, 255, 255, 0.08);
-  padding: 15px;
-  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, rgba(217, 179, 106, 0.1), rgba(217, 179, 106, 0.02));
+  border-left: 2px solid var(--jin);
 }
 
 .stat-title {
-  color: #a8c7ff;
+  color: var(--screen-text-2);
   font-size: 12px;
-  margin-bottom: 8px;
 }
 
 .stat-value {
-  color: #fff;
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 4px;
+  margin: 4px 0 2px;
+  font-family: var(--font-num);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--jin-light);
 }
 
 .stat-compare {
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  font-size: 11px;
 }
 
 .stat-compare.up {
-  color: #6dd230;
+  color: #e07a64;
 }
 
 .stat-compare.down {
-  color: #ff4d4d;
+  color: #5fb3a1;
 }
 
-.icon {
-  font-weight: bold;
-}
-
-.comments-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-  height: calc(100% - 60px);
-}
-
-.comment-card {
-  padding: 15px;
-  border-radius: 8px;
-  min-height: 120px;
-}
-
-.comment-card.blue {
-  background: linear-gradient(135deg, rgba(42, 91, 172, 0.3), rgba(25, 55, 109, 0.5));
-}
-
-.comment-card.green {
-  background: linear-gradient(135deg, rgba(63, 159, 117, 0.3), rgba(47, 119, 89, 0.5));
-}
-
-.user-info {
+/* 热点话题 */
+.topics {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+}
+.topic {
+  display: grid;
+  grid-template-columns: 22px 76px 1fr 36px 44px;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+.t-rank {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  font-family: var(--font-num);
+  font-size: 11px;
+  color: var(--screen-text-2);
+  border: 1px solid rgba(169, 180, 204, 0.4);
+  border-radius: 2px;
+}
+.t-rank.top {
+  color: #1a1206;
+  background: var(--jin);
+  border-color: var(--jin-light);
+}
+.t-name {
+  color: var(--screen-text);
+}
+.t-bar {
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(217, 179, 106, 0.08);
+  overflow: hidden;
+}
+.t-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, rgba(217, 179, 106, 0.3), var(--jin-light));
+}
+.t-num {
+  text-align: right;
+  font-family: var(--font-num);
+  color: var(--jin-light);
+}
+.t-trend {
+  text-align: right;
+  font-size: 11px;
+}
+.t-trend.up { color: #e07a64; }
+.t-trend.down { color: #5fb3a1; }
+
+/* 评论列表 */
+.comments {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.comment {
+  padding: 8px 12px;
+  background: rgba(217, 179, 106, 0.04);
+  border: 1px solid rgba(217, 179, 106, 0.12);
+  border-left: 3px solid var(--tone);
+}
+.comment.pos { --tone: #5fb3a1; }
+.comment.neg { --tone: #d9604c; }
+.comment.neu { --tone: #6f9fd8; }
+
+.c-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.c-rank {
+  font-family: var(--font-num);
+  font-weight: 700;
+  color: var(--jin);
 }
 
 .username {
-  color: #7db2ff;
-  font-size: 12px;
+  color: var(--screen-text);
+}
+
+.tone {
+  padding: 0 6px;
+  font-size: 11px;
+  line-height: 18px;
+  color: var(--tone);
+  border: 1px solid var(--tone);
+  border-radius: 2px;
 }
 
 .time {
-  color: #8c9eb5;
-  font-size: 12px;
+  margin-left: auto;
+  color: var(--screen-text-2);
 }
 
 .comment-content {
-  color: #e6f7ff;
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.wordcloud-btn {
-  position: absolute;
-  right: 20px;
-  top: 0;
-  transform: translateY(-50%);
-  background: rgba(125, 178, 255, 0.3);
-  border: 1px solid #7db2ff;
-  color: #7db2ff;
-  padding: 6px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.wordcloud-btn:hover {
-  background: rgba(125, 178, 255, 0.5);
-}
-
-.modal-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-
-.modal-content {
-  background: rgba(14, 32, 62, 0.95);
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-  position: relative;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.modal-header h3 {
-  color: #7db2ff;
-  margin: 0;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  color: #7db2ff;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 0 10px;
-}
-
-.close-btn:hover {
-  color: #a8c7ff;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #cfd6e4;
 }
 </style>

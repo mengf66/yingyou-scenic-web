@@ -1,121 +1,73 @@
 <template>
-  <div class="main-container">
-    <!-- 景点热度排行 -->
-    <div class="container container1">
-      <div class="title-box2">
-        <h3>景点热度排行</h3>
-      </div>
-      <HorizontalBar
-          :data="hotRankData"
-          class="chart-content chart-content2"
-          :style="{ height: container1Height }"
-      />
+  <div class="screen-grid">
+    <!-- 左列 -->
+    <div class="col">
+      <ScreenPanel title="景点热度排行" sub="近 30 日综合指数" class="r-3">
+        <HorizontalBar :data="hotRankData" />
+      </ScreenPanel>
+      <ScreenPanel title="消费业态占比" class="r-3">
+        <RingPie :data="consumptionData" />
+      </ScreenPanel>
+      <ScreenPanel title="游客年龄分布" class="r-3">
+        <GroupedBar :data="ageData" />
+      </ScreenPanel>
+      <ScreenPanel title="来源城市排行" class="r-3">
+        <HorizontalBar :data="cityRankData" />
+      </ScreenPanel>
     </div>
 
-    <div class="container container2">
-      <!-- 消费业态占比 -->
-      <div class="sub-container" style="top: 10px; height: 30%;">
-        <div class="title-box2">
-          <h3>消费业态占比</h3>
+    <!-- 中列 -->
+    <div class="col">
+      <div class="kpi-row">
+        <div v-for="s in visitorStats" :key="s.title" class="kpi">
+          <div class="kpi-label">{{ s.title }}</div>
+          <div class="kpi-value">{{ s.value }}</div>
+          <div v-if="s.trend" :class="['kpi-trend', s.trend]">{{ s.trend === 'up' ? '▲' : '▼' }} {{ s.rate }}%</div>
+          <div v-else class="kpi-trend live"><i></i>实时</div>
         </div>
-        <RingPie :data="consumptionData" class="chart-content" />
       </div>
+      <ScreenPanel title="山西文旅热力图" sub="地市客流热度 · 古城游线" class="map-panel">
+        <template #extra><TimeWeather /></template>
+        <ShanxiMap :data="heatData.coordinates" />
+      </ScreenPanel>
+      <ScreenPanel title="年度客流量统计" sub="今年 vs 去年" class="r-bottom">
+        <CompareBar :data="annualData" />
+      </ScreenPanel>
+    </div>
 
-      <!-- 游客年龄分布 -->
-      <div class="sub-container" style="top: 32%; height: 44%;">
-        <div class="title-box2">
-          <h3>游客年龄分布</h3>
+    <!-- 右列 -->
+    <div class="col">
+      <ScreenPanel title="年度游客对比" sub="单位：万人次" class="r-3">
+        <MultiLine :data="annualCompare" />
+      </ScreenPanel>
+      <ScreenPanel title="游客满意度" class="r-4">
+        <SatisfactionPie :data="satisfactionData" />
+      </ScreenPanel>
+      <ScreenPanel title="热门景区实时客流" sub="在园人数 / 最大承载量" class="r-3">
+        <div class="flow-list">
+          <div v-for="f in liveFlow" :key="f.name" class="flow">
+            <span class="flow-name">{{ f.name }}</span>
+            <div class="flow-bar"><i :class="level(f.rate)" :style="{ width: f.rate + '%' }"></i></div>
+            <span class="flow-num">{{ f.now.toLocaleString() }}</span>
+            <span :class="['flow-tag', level(f.rate)]">{{ { hot: '拥挤', warm: '较多', ok: '舒适' }[level(f.rate)] }}</span>
+          </div>
         </div>
-        <GroupedBar :data="ageData" class="chart-content" />
-      </div>
-
-      <!-- 来源城市排行 -->
-      <div class="sub-container" style="top: 72%; height: 30%;">
-        <div class="title-box2">
-          <h3>来源城市排行</h3>
-        </div>
-        <HorizontalBar
-            :data="cityRankData"
-            class="chart-content"
-            :style="{ height: cityChartHeight }"
-        />
-      </div>
-    </div>
-
-    <!-- 时间天气 + 山西省地图 -->
-    <div class="container container3">
-      <TimeWeather class="time-weather" />
-      <div class="title-box map-title">
-        <h3>山西省地图</h3>
-        <tmap-map
-            :mapKey="tmapKey"
-            :events="events"
-            :center="center"
-            :zoom="zoom"
-            :doubleClickZoom="doubleClickZoom"
-            :control="control"
-        />
-      </div>
-    </div>
-
-    <!-- 游客热力分布 -->
-    <div class="container container4">
-      <div class="title-box">
-        <h3>游客热力分布</h3>
-      </div>
-      <HeatMap :data="heatData" class="heat-content" />
-    </div>
-
-    <!-- 年度客流量统计 -->
-    <div class="container container5">
-      <div class="title-box">
-        <h3>年度客流量统计</h3>
-      </div>
-      <CompareBar :data="annualData" class="chart-content5" />
-    </div>
-
-    <!-- 游客数量统计 -->
-    <div class="container container6">
-      <div class="title-box2">
-        <h3>游客数量统计</h3>
-      </div>
-      <VisitorStats :stats="visitorStats" class="stats-content" />
-    </div>
-
-    <!-- 年度游客对比 -->
-    <div class="container container7">
-      <div class="title-box2">
-        <h3>年度游客对比</h3>
-      </div>
-      <MultiLine :data="annualCompare" class="chart-content5" />
-    </div>
-
-    <!-- 游客满意度 -->
-    <div class="container container8">
-      <div class="title-box2">
-        <h3>游客满意度</h3>
-      </div>
-      <SatisfactionPie
-          :data="satisfactionData"
-          class="satisfaction-content"
-          :style="{ height: satisfactionHeight }"
-      />
+      </ScreenPanel>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
+import { ref } from 'vue'
 import HorizontalBar from './HorizontalBar.vue'
 import GroupedBar from './GroupedBar.vue'
 import CompareBar from './CompareBar.vue'
 import MultiLine from './MultiLine.vue'
 import TimeWeather from './TimeWeather.vue'
-import MapChart from './MapChart.vue'
-import VisitorStats from './VisitorStats.vue'
-import HeatMap from './HeatMap.vue'
 import RingPie from './RingPie.vue'
 import SatisfactionPie from './SatisfactionPie.vue'
+import ScreenPanel from './screen/ScreenPanel.vue'
+import ShanxiMap from './screen/ShanxiMap.vue'
 
 export default {
   components: {
@@ -124,11 +76,10 @@ export default {
     CompareBar,
     MultiLine,
     TimeWeather,
-    MapChart,
-    VisitorStats,
-    HeatMap,
     RingPie,
-    SatisfactionPie
+    SatisfactionPie,
+    ScreenPanel,
+    ShanxiMap
   },
   setup() {
     // 景点热度排行
@@ -160,9 +111,8 @@ export default {
       female: [110, 320, 850, 620, 410, 310]
     })
 
-    // 游客热力分布
+    // 游客热力分布（名称需与 assets/shanxi.json 中的地市名称一致）
     const heatData = ref({
-      // 名称需与 assets/shanxi.json 中的地市名称一致（带"市"）
       coordinates: [
         { name: '太原市', value: 95 },
         { name: '大同市', value: 80 },
@@ -196,7 +146,7 @@ export default {
     const visitorStats = ref([
       { title: '今日游客', value: '24,532', trend: 'up', rate: 12 },
       { title: '昨日游客', value: '21,890', trend: 'down', rate: 5 },
-      { title: '当前游客', value: '3,245', trend: null },
+      { title: '当前在园', value: '3,245', trend: null },
       { title: '本周游客', value: '158,200', trend: 'up', rate: 8 },
       { title: '本月游客', value: '582,300', trend: 'up', rate: 15 }
     ])
@@ -208,23 +158,20 @@ export default {
       { name: '设施满意度', value: 85 },
       { name: '服务满意度', value: 90 },
       { name: '价格满意度', value: 82 },
-      { name: '清洁和维护满意度', value: 87 }
+      { name: '卫生满意度', value: 87 }
     ])
 
-    // 腾讯地图
-    const center = ref({ lat: 37.2037904, lng: 112.1771043 })
-    const zoom = ref(15)
-    const doubleClickZoom = ref(true)
+    // 热门景区实时客流（rate = 当前在园 / 最大承载量，%）
+    const liveFlow = ref([
+      { name: '平遥古城', now: 18650, rate: 88 },
+      { name: '五台山', now: 15320, rate: 76 },
+      { name: '云冈石窟', now: 9870, rate: 71 },
+      { name: '壶口瀑布', now: 7640, rate: 62 },
+      { name: '晋祠', now: 5210, rate: 48 },
+      { name: '乔家大院', now: 4380, rate: 42 }
+    ])
 
-    const container1Height = computed(() => window.innerHeight * 0.05 - 80 + 'px')
-    const cityChartHeight = computed(() => window.innerHeight * 0.2 - 30 + 'px')
-    const satisfactionHeight = computed(() => window.innerHeight * 0.4 - 50 + 'px')
-
-    // 原代码在 resize 监听里再次派发 resize 事件，会无限递归导致页面卡死。
-    // 各图表组件（BaseChart）已自行监听窗口尺寸变化，这里只需在挂载后触发一次重排。
-    onMounted(() => {
-      setTimeout(() => window.dispatchEvent(new Event('resize')), 0)
-    })
+    const level = rate => (rate > 85 ? 'hot' : rate > 65 ? 'warm' : 'ok')
 
     return {
       hotRankData,
@@ -236,229 +183,136 @@ export default {
       annualCompare,
       visitorStats,
       satisfactionData,
-      container1Height,
-      cityChartHeight,
-      satisfactionHeight,
-      // 原代码把双击事件绑定到了 window.print，双击地图会弹出打印对话框，已移除
-      events: {},
-      // 腾讯地图 Key，在 .env.local 的 VITE_TMAP_KEY 中配置
-      tmapKey: import.meta.env.VITE_TMAP_KEY || '',
-      center,
-      zoom,
-      doubleClickZoom,
-      control: {
-        scale: {},
-        zoom: {
-          position: 'bottomRight'
-        }
-      }
+      liveFlow,
+      level
     }
   }
 }
 </script>
 
 <style scoped>
-.main-container {
-  position: relative;
-  height: calc(90vh - 80px);
-  background: url('../assets/background.png');
-  padding: 20px;
-}
-
-.container {
-  position: absolute;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border-radius: 8px;
-  padding: 15px;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
-.container1 {
-  top: 5px;
-  left: 20px;
-  width: 27%;
-  height: 15vh;
-  min-height: 180px;
-}
-
-.container2 {
-  top: calc(16vh + 40px);
-  left: 20px;
-  width: 27%;
-  height: 67vh;
-  min-height: 400px;
-}
-
-.container3 {
-  top: 10px;
-  left: calc(27% + 40px);
-  width: 38%;
-  height: 45vh;
-}
-
-.container4 {
-  top: calc(45vh + 40px);
-  left: calc(27% + 40px);
-  width: 17%;
-  height: 38vh;
-  min-height: 200px;
-}
-
-.container5 {
-  top: calc(45vh + 40px);
-  left: calc(44% + 60px);
-  width: 20%;
-  height: 38vh;
-  min-height: 200px;
-}
-
-.container6,
-.container7,
-.container8 {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.container6 {
-  top: 10px;
-  right: 20px;
-  width: 30%;
-  height: 25vh;
-  min-height: 150px;
-}
-
-.container7 {
-  top: calc(25vh + 20px);
-  right: 20px;
-  width: 30%;
-  height: 25vh;
-  min-height: 200px;
-}
-
-.container8 {
-  top: calc(50vh + 30px);
-  right: 20px;
-  width: 30%;
-  height: 34vh;
-  min-height: 280px;
-}
-
-.heat-content {
-  width: 100%;
-  height: calc(100% - 50px) !important;
-}
-
-.chart-content {
-  width: 100%;
-  top: 20px;
-  height: calc(90% - 40px) !important;
-}
-
-.chart-content2 {
-  height: 110% !important;
-}
-
-.chart-content5 {
-  width: 100%;
-  height: 45vh !important;
-}
-
-.sub-container {
-  position: absolute;
-  width: 100%;
+.screen-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.55fr 1fr;
+  gap: 14px;
   height: 100%;
-  box-sizing: border-box;
+  min-height: 0;
 }
-
-.satisfaction-content {
-  height: 100%;
-  width: 90%;
-}
-
-.map-content {
-  height: calc(100% - 80px) !important;
-}
-
-.title-box,
-.title-box2 {
-  background: rgba(0, 0, 0, 0.3);
-  padding: 8px 15px;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  position: relative;
-  z-index: 1;
-}
-
-.title-box h3,
-.title-box2 h3 {
-  color: #a8d1ff;
-  font-size: 16px;
-  margin: 0;
-  font-weight: 500;
-  letter-spacing: 1px;
-}
-
-.title-box2 {
-  width: 5%;
-  height: auto;
-  padding: 15px 8px;
-}
-
-.title-box2 h3 {
-  writing-mode: vertical-lr;
-}
-
-.container1 .title-box {
-  text-align: center;
-  width: max-content;
-  margin: 0 auto 15px;
-  background: linear-gradient(90deg, rgba(42, 91, 172, 0.6), rgba(25, 55, 109, 0.8));
-  border: 1px solid rgba(42, 91, 172, 0.5);
-}
-
-.container2 .sub-container .title-box {
-  text-align: center;
-  top: 15px;
-  width: max-content;
-  margin: 0 auto 15px;
-  background: linear-gradient(90deg, rgba(42, 91, 172, 0.6), rgba(25, 55, 109, 0.8));
-  border: 1px solid rgba(42, 91, 172, 0.5);
-}
-
-.map-title {
-  height: 30vh;
-}
-
-.container1,
-.container2 .sub-container {
+.col {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 0;
+  min-width: 0;
 }
+.r-3 { flex: 3; }
+.r-4 { flex: 4; }
+.map-panel { flex: 7; }
+.r-bottom { flex: 3.2; }
 
-.container6 .title-box2,
-.container7 .title-box2,
-.container8 .title-box2 {
-  text-align: center;
-  width: 5%;
-  margin: 0 auto 15px;
-  background: linear-gradient(90deg, rgba(42, 91, 172, 0.6), rgba(25, 55, 109, 0.8));
+/* ---------- 核心指标 ---------- */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  flex-shrink: 0;
+}
+.kpi {
   position: relative;
+  padding: 10px 8px 8px;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(217, 179, 106, 0.12), rgba(217, 179, 106, 0.02));
+  border: 1px solid rgba(217, 179, 106, 0.28);
+  border-radius: 2px;
 }
-
-.container6 .title-box2::after,
-.container7 .title-box2::after,
-.container8 .title-box2::after {
-  content: "";
+.kpi::before {
+  content: '';
   position: absolute;
-  bottom: -8px;
   left: 50%;
-  transform: translateX(-50%);
+  top: -1px;
   width: 40%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #2a5bac, transparent);
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, var(--jin-light), transparent);
 }
+.kpi-label {
+  font-size: 12px;
+  color: var(--screen-text-2);
+  letter-spacing: 1px;
+}
+.kpi-value {
+  margin: 4px 0 2px;
+  font-family: var(--font-num);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--jin-light);
+  text-shadow: 0 0 12px rgba(217, 179, 106, 0.45);
+}
+.kpi-trend {
+  font-size: 11px;
+}
+.kpi-trend.up { color: #e07a64; }
+.kpi-trend.down { color: #5fb3a1; }
+.kpi-trend.live {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--screen-text-2);
+}
+.kpi-trend.live i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #5fb3a1;
+  animation: blink 1.4s infinite;
+}
+@keyframes blink {
+  50% { opacity: 0.2; }
+}
+
+/* ---------- 实时客流 ---------- */
+.flow-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+}
+.flow {
+  display: grid;
+  grid-template-columns: 64px 1fr 52px 38px;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+.flow-name {
+  color: var(--screen-text);
+}
+.flow-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(217, 179, 106, 0.08);
+  overflow: hidden;
+}
+.flow-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+}
+.flow-bar i.ok { background: linear-gradient(90deg, rgba(95, 179, 161, 0.3), #5fb3a1); }
+.flow-bar i.warm { background: linear-gradient(90deg, rgba(217, 179, 106, 0.3), #e8cf94); }
+.flow-bar i.hot { background: linear-gradient(90deg, rgba(217, 96, 76, 0.3), #d9604c); }
+.flow-num {
+  text-align: right;
+  font-family: var(--font-num);
+  color: var(--jin-light);
+}
+.flow-tag {
+  text-align: center;
+  font-size: 11px;
+  border-radius: 2px;
+  padding: 1px 0;
+}
+.flow-tag.ok { color: #5fb3a1; border: 1px solid rgba(95, 179, 161, 0.5); }
+.flow-tag.warm { color: #e8cf94; border: 1px solid rgba(232, 207, 148, 0.5); }
+.flow-tag.hot { color: #e07a64; border: 1px solid rgba(224, 122, 100, 0.6); }
 </style>

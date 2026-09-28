@@ -3,8 +3,8 @@
 </template>
 
 <script>
-import * as echarts from 'echarts'
 import BaseChart from './BaseChart.vue'
+import { C, axis, tooltip, goldBar } from './screen/theme'
 
 export default {
   components: { BaseChart },
@@ -12,61 +12,32 @@ export default {
   computed: {
     option() {
       return {
-        grid: {
-          top: '15%',
-          bottom: '15%',
-          left: '18%',
-          right: '10%'
-        },
-        yAxis: {
+        tooltip: tooltip({ trigger: 'axis', axisPointer: { type: 'shadow' } }),
+        grid: { top: 6, bottom: 6, left: 4, right: 48, containLabel: true },
+        yAxis: axis({
           type: 'category',
+          inverse: true,
           data: this.data.categories,
-          axisLabel: {
-            color: '#fff',
-            fontSize: 12,
-            width: 100,
-            overflow: 'break'
-          },
-          axisTick: {
-            show: false
-          }
-        },
-        xAxis: {
-          type: 'value',
-          axisLabel: {
-            color: '#fff',
-            fontSize: 10
-          },
-          splitLine: {
-            lineStyle: {
-              color: 'rgba(255,255,255,0.1)'
-            }
-          }
-        },
+          axisLine: { show: false },
+          axisLabel: { color: C.text, fontSize: 12 }
+        }),
+        xAxis: { type: 'value', show: false },
         series: [{
           type: 'bar',
+          barWidth: 10,
+          showBackground: true,
+          backgroundStyle: { color: 'rgba(217,179,106,0.07)', borderRadius: 5 },
           label: {
             show: true,
             position: 'right',
-            color: '#fff',
-            fontSize: 12,
-            formatter: '{@score}',
-            rich: {
-              score: {
-                verticalAlign: 'middle',
-                padding: [0, 0, 0, 10]
-              }
-            }
+            color: C.goldLight,
+            fontSize: 12
           },
-          barWidth: 16,
-          data: this.data.values,
-          itemStyle: {
-            borderRadius: [8, 8, 0, 0],
-            color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-              { offset: 0, color: '#37A2DA' },
-              { offset: 1, color: '#71D5DE' }
-            ])
-          }
+          // 前三名鎏金高亮，其余用淡蓝
+          data: this.data.values.map((v, i) => ({
+            value: v,
+            itemStyle: { color: i < 3 ? goldBar() : 'rgba(111,159,216,0.7)', borderRadius: 5 }
+          }))
         }]
       }
     }

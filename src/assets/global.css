@@ -1,8 +1,94 @@
+/* =========================================================
+ * 应游晋游 · 国风古城主题
+ * ---------------------------------------------------------
+ * 大屏：深靛蓝底 + 鎏金描边
+ * 管理页：宣纸米白底 + 朱红主色 + 黛青侧栏
+ * 所有页面统一从这里取颜色，改主题只需改这一个文件。
+ * ========================================================= */
+
+@font-face {
+  font-family: 'JinTitle';
+  src: url('./fonts/title.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JinBrush';
+  src: url('./fonts/brush.woff2') format('woff2');
+  font-display: swap;
+}
+
 :root {
-  --primary-color: #2a5bac;
+  /* 字体 */
+  --font-title: 'JinTitle', 'STKaiti', 'KaiTi', serif;
+  --font-brush: 'JinBrush', 'STXingkai', 'STKaiti', 'KaiTi', serif;
+  --font-body: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+  --font-num: 'DIN Alternate', 'Bahnschrift', 'Roboto Condensed', 'Helvetica Neue', Arial, sans-serif;
+
+  /* 传统色 */
+  --zhu: #b83a2f;        /* 朱红 */
+  --zhu-deep: #962c23;
+  --zhu-soft: #f6e4df;
+  --dai: #2b3a4a;        /* 黛青 */
+  --dai-deep: #1d2833;
+  --dai-soft: #3a4d60;
+  --jin: #c9a45c;        /* 鎏金 */
+  --jin-light: #e8cf94;
+  --jin-deep: #a88340;
+  --song: #3f7a5f;       /* 松绿 */
+  --dian: #0e1a33;       /* 靛蓝 */
+  --dian-2: #13244a;
+  --xuan: #f6f1e7;       /* 宣纸 */
+  --xuan-2: #efe7d6;
+  --mo: #2a2522;         /* 墨 */
+  --mo-2: #5c534c;
+  --mo-3: #8f857b;
+  --line: #e6dccb;
+
+  /* 大屏 */
+  --screen-bg: #0b1530;
+  --screen-panel: linear-gradient(180deg, rgba(22, 38, 76, 0.82) 0%, rgba(13, 24, 52, 0.88) 100%);
+  --screen-border: rgba(201, 164, 92, 0.35);
+  --screen-text: #e9dfc8;
+  --screen-text-2: #a9b4cc;
+
+  /* 兼容旧变量 */
+  --primary-color: var(--zhu);
   --glass-bg: rgba(255, 255, 255, 0.05);
-  --border-gradient: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0) 100%);
-  --title-bg: #1b3a6d;
+  --title-bg: var(--dai);
+
+  /* Element Plus 主色：朱红 */
+  --el-color-primary: #b83a2f;
+  --el-color-primary-light-3: #cd7169;
+  --el-color-primary-light-5: #dc9d97;
+  --el-color-primary-light-7: #eac4c0;
+  --el-color-primary-light-8: #f1d8d5;
+  --el-color-primary-light-9: #f8ebea;
+  --el-color-primary-dark-2: #932e26;
+  --el-color-success: #3f7a5f;
+  --el-color-success-light-3: #79a28f;
+  --el-color-success-light-5: #9fbdaf;
+  --el-color-success-light-7: #c5d7cf;
+  --el-color-success-light-8: #d9e4df;
+  --el-color-success-light-9: #ecf2ef;
+  --el-color-warning: #c9892f;
+  --el-color-warning-light-3: #d9ac6d;
+  --el-color-warning-light-5: #e4c497;
+  --el-color-warning-light-7: #efdbc1;
+  --el-color-warning-light-8: #f4e7d5;
+  --el-color-warning-light-9: #faf3ea;
+  --el-color-danger: #c2413a;
+  --el-color-info: #8f857b;
+  --el-border-radius-base: 4px;
+  --el-font-family: var(--font-body);
+  --el-text-color-primary: #2a2522;
+  --el-text-color-regular: #4a423c;
+  --el-border-color: #ddd2bf;
+  --el-border-color-light: #e6dccb;
+  --el-border-color-lighter: #eee6d8;
+  --el-fill-color-light: #f7f2e8;
+  --el-fill-color-lighter: #faf6ee;
+  --el-bg-color-page: #f6f1e7;
 }
 
 @media (max-width: 1200px) {
@@ -20,6 +106,174 @@ body,
 }
 
 body {
-  font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-body);
+  color: var(--mo);
   -webkit-font-smoothing: antialiased;
+}
+
+/* 细滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(143, 133, 123, 0.35);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------- 管理页通用组件 ---------- */
+
+/* 宣纸卡片 */
+.jin-card {
+  position: relative;
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 2px rgba(80, 60, 30, 0.04), 0 4px 14px rgba(80, 60, 30, 0.04);
+}
+
+/* 卡片标题：朱红竖印 + 楷体 */
+.jin-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-family: var(--font-title);
+  font-size: 17px;
+  font-weight: normal;
+  color: var(--mo);
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+.jin-title::before {
+  content: '';
+  flex-shrink: 0;
+  width: 4px;
+  height: 16px;
+  border-radius: 1px;
+  background: linear-gradient(180deg, var(--zhu), var(--zhu-deep));
+}
+.jin-title small {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--mo-3);
+  letter-spacing: 0;
+  margin-left: 4px;
+}
+
+/* 关键词小签 */
+.jin-kw {
+  display: inline-block;
+  padding: 0 7px;
+  margin: 2px 4px 2px 0;
+  font-size: 12px;
+  line-height: 20px;
+  border-radius: 2px;
+  background: #f3ece0;
+  color: #7a5a2e;
+  border: 1px solid #e6d8bf;
+}
+
+/* 数字统计卡 */
+.jin-stat {
+  position: relative;
+  overflow: hidden;
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 14px 18px 12px;
+  box-shadow: 0 1px 2px rgba(80, 60, 30, 0.04);
+}
+.jin-stat::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 14px;
+  bottom: 14px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: var(--c, var(--zhu));
+}
+.jin-stat::after {
+  /* 右下角回纹装饰 */
+  content: '';
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 44px;
+  height: 44px;
+  opacity: 0.1;
+  border: 5px solid var(--c, var(--zhu));
+  border-left-color: transparent;
+  box-sizing: border-box;
+  box-shadow: inset 0 0 0 5px #fffdf8, inset 0 0 0 10px var(--c, var(--zhu));
+}
+.jin-stat .label {
+  font-size: 13px;
+  color: var(--mo-3);
+}
+.jin-stat .value {
+  margin: 6px 0 2px;
+  font-family: var(--font-num);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--c, var(--zhu));
+}
+.jin-stat .value small {
+  margin-left: 4px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: normal;
+  color: var(--mo-3);
+}
+.jin-stat .sub {
+  font-size: 12px;
+  color: var(--mo-3);
+}
+
+/* ---------- Element Plus 微调 ---------- */
+.el-table {
+  --el-table-header-bg-color: #f5efe3;
+  --el-table-header-text-color: #5c534c;
+  --el-table-row-hover-bg-color: #fbf6ec;
+  --el-table-border-color: #eee6d8;
+  --el-table-current-row-bg-color: #f8ebea;
+}
+.el-table th.el-table__cell {
+  font-weight: 600;
+}
+.el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+  background: #fcf9f3;
+}
+.el-dialog {
+  border-radius: 8px;
+  --el-dialog-bg-color: #fffdf8;
+}
+.el-dialog__title {
+  font-family: var(--font-title);
+  font-size: 19px;
+  letter-spacing: 1px;
+}
+.el-drawer {
+  --el-drawer-bg-color: #fffdf8;
+}
+.el-drawer__title {
+  font-family: var(--font-title);
+  font-size: 19px;
+  color: var(--mo);
+}
+.el-descriptions__label.el-descriptions__cell.is-bordered-label {
+  background: #f7f1e6;
+  color: #5c534c;
+}
+.el-tag {
+  border-radius: 2px;
+}
+.el-message-box {
+  --el-messagebox-title-color: var(--mo);
 }

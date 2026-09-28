@@ -4,34 +4,43 @@
 
 <script>
 import BaseChart from './BaseChart.vue'
+import { C, PALETTE, tooltip, legend } from './screen/theme'
 
 export default {
   components: { BaseChart },
   props: ['data'],
   computed: {
     option() {
+      const total = this.data.data.reduce((s, d) => s + d.value, 0)
       return {
-        tooltip: {
-          trigger: 'item'
-        },
-        legend: {
+        color: PALETTE,
+        tooltip: tooltip({ trigger: 'item', formatter: '{b}：{d}%' }),
+        legend: legend({
           orient: 'vertical',
-          left: 'left',
-          textStyle: {
-            color: '#fff'
+          right: 4,
+          top: 'middle',
+          itemGap: 12,
+          formatter: name => {
+            const d = this.data.data.find(x => x.name === name)
+            return `${name}  ${Math.round((d.value / total) * 100)}%`
           }
-        },
+        }),
         series: [{
           type: 'pie',
-          radius: ['50%', '70%'],
+          radius: ['52%', '74%'],
+          center: ['32%', '50%'],
           data: this.data.data,
           label: {
-            color: '#fff'
+            show: true,
+            position: 'center',
+            formatter: '消费\n业态',
+            color: C.goldLight,
+            fontSize: 14,
+            lineHeight: 18
           },
-          itemStyle: {
-            borderColor: '#0a1d3a',
-            borderWidth: 3
-          }
+          emphasis: { label: { show: true, formatter: '{b}\n{d}%', fontSize: 15 } },
+          labelLine: { show: false },
+          itemStyle: { borderColor: '#101d3f', borderWidth: 3 }
         }]
       }
     }

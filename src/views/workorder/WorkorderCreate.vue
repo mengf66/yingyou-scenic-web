@@ -306,10 +306,12 @@ const priorityTag = p => ({ 紧急: 'danger', 高: 'warning', 中: 'primary', �
 
 <style scoped>
 .card {
-  background: #fff;
-  border-radius: 8px;
-  padding: 24px 28px;
-  box-shadow: 0 1px 4px rgba(15, 35, 80, 0.06);
+  position: relative;
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 2px rgba(80, 60, 30, 0.04), 0 4px 14px rgba(80, 60, 30, 0.04);
 }
 .steps {
   margin-bottom: 26px;
@@ -324,19 +326,19 @@ const priorityTag = p => ({ 紧急: 'danger', 高: 'warning', 中: 'primary', �
   max-width: 640px;
 }
 :deep(.picked) {
-  --el-table-tr-bg-color: #ecf5ff;
+  --el-table-tr-bg-color: #f8ebea;
 }
 .confirm-box {
   margin-top: 16px;
-  background: #f6f9ff;
-  border: 1px solid #dbe6fb;
+  background: #faf5ec;
+  border: 1px solid #eadfcb;
   border-radius: 6px;
   padding: 12px 16px;
 }
 .cb-title {
   font-weight: 600;
   margin-bottom: 8px;
-  color: #2a5bac;
+  color: #962c23;
 }
 .cb-row,
 .damage {
@@ -345,7 +347,7 @@ const priorityTag = p => ({ 紧急: 'danger', 高: 'warning', 中: 'primary', �
   gap: 16px;
   flex-wrap: wrap;
   font-size: 13px;
-  color: #5a6477;
+  color: #5c534c;
 }
 .damage {
   margin-top: 10px;
@@ -356,12 +358,14 @@ const priorityTag = p => ({ 紧急: 'danger', 高: 'warning', 中: 'primary', �
 }
 .kw {
   display: inline-block;
-  padding: 0 6px;
-  margin-right: 4px;
+  padding: 0 7px;
+  margin: 2px 4px 2px 0;
   font-size: 12px;
-  border-radius: 3px;
-  background: #eef4ff;
-  color: #3b7ad9;
+  line-height: 20px;
+  border-radius: 2px;
+  background: #f3ece0;
+  color: #7a5a2e;
+  border: 1px solid #e6d8bf;
 }
 .detail {
   max-width: 860px;
@@ -370,8 +374,8 @@ const priorityTag = p => ({ 紧急: 'danger', 高: 'warning', 中: 'primary', �
   display: flex;
   align-items: center;
   gap: 6px;
-  background: #f0f9eb;
-  color: #3f7a26;
+  background: #edf3ef;
+  color: #2f5f49;
   font-size: 13px;
   padding: 10px 14px;
   border-radius: 6px;
@@ -384,7 +388,7 @@ const priorityTag = p => ({ 紧急: 'danger', 高: 'warning', 中: 'primary', �
   margin-top: 18px;
 }
 .muted {
-  color: #a0a8b8;
+  color: #a39a8f;
   font-size: 12px;
   margin-left: 8px;
 }
@@ -400,6 +404,6 @@ const priorityTag = p => ({ 紧急: 'danger', 高: 'warning', 中: 'primary', �
   gap: 12px;
   margin-top: 24px;
   padding-top: 18px;
-  border-top: 1px solid #eef1f6;
+  border-top: 1px solid #eee6d8;
 }
 </style>

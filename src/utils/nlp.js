@@ -79,12 +79,12 @@ export function calcRiskIndex({ text = '', type = '其他', score = 0, sameTopic
   return Math.round(Math.max(0, Math.min(100, r)))
 }
 
-/** 预警等级：与国家突发事件预警颜色一致 */
+/** 预警等级：与国家突发事件预警颜色（红/橙/黄/蓝）一致，色值调整为与国风主题协调的传统色 */
 export function riskLevel(index) {
-  if (index >= 75) return { level: 'Ⅰ级', color: '红色', tag: 'danger', hex: '#f56c6c' }
-  if (index >= 55) return { level: 'Ⅱ级', color: '橙色', tag: 'warning', hex: '#ff9f43' }
-  if (index >= 35) return { level: 'Ⅲ级', color: '黄色', tag: 'warning', hex: '#e6c229' }
-  return { level: 'Ⅳ级', color: '蓝色', tag: 'primary', hex: '#409eff' }
+  if (index >= 75) return { level: 'Ⅰ级', color: '红色', tag: 'danger', hex: '#c2413a' }
+  if (index >= 55) return { level: 'Ⅱ级', color: '橙色', tag: 'warning', hex: '#d97a34' }
+  if (index >= 35) return { level: 'Ⅲ级', color: '黄色', tag: 'warning', hex: '#c9a227' }
+  return { level: 'Ⅳ级', color: '蓝色', tag: 'info', hex: '#4a7aa8' }
 }
 
 /** 对一条反馈做完整分析 */

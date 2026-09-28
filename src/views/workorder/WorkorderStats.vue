@@ -74,7 +74,7 @@ const toTime = s => new Date(s.replace(/-/g, '/')).getTime()
 const hoursOf = o => (o.finishedAt ? (toTime(o.finishedAt) - toTime(o.createdAt)) / 3600000 : null)
 const finished = computed(() => orders.value.filter(o => o.finishedAt))
 const avg = arr => (arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0)
-const COLORS = ['#3b7ad9', '#11b95c', '#e6a23c', '#f56c6c', '#7a5af8', '#1bb2c4', '#ff8fb1', '#8a94a6']
+const COLORS = ['#b83a2f', '#3f7a5f', '#c9892f', '#c2413a', '#6b5b95', '#3d7f8c', '#b9786a', '#8f857b']
 
 const kpis = computed(() => {
   const all = orders.value
@@ -83,12 +83,12 @@ const kpis = computed(() => {
   const overdue = all.filter(o => (o.finishedAt ? o.finishedAt > o.deadline : o.deadline < nowStr)).length
   const sats = fin.filter(o => o.satisfaction).map(o => o.satisfaction)
   return [
-    { label: '工单总数', value: all.length, unit: '单', color: '#3b7ad9' },
-    { label: '已完成', value: fin.length, unit: '单', color: '#11b95c' },
-    { label: '完成率', value: all.length ? ((fin.length / all.length) * 100).toFixed(1) : 0, unit: '%', color: '#1bb2c4' },
-    { label: '平均处置时长', value: avg(fin.map(hoursOf)).toFixed(1), unit: 'h', color: '#7a5af8' },
-    { label: '超时率', value: all.length ? ((overdue / all.length) * 100).toFixed(1) : 0, unit: '%', color: '#f56c6c' },
-    { label: '平均满意度', value: avg(sats).toFixed(2), unit: '/5', color: '#e6a23c' }
+    { label: '工单总数', value: all.length, unit: '单', color: '#b83a2f' },
+    { label: '已完成', value: fin.length, unit: '单', color: '#3f7a5f' },
+    { label: '完成率', value: all.length ? ((fin.length / all.length) * 100).toFixed(1) : 0, unit: '%', color: '#3d7f8c' },
+    { label: '平均处置时长', value: avg(fin.map(hoursOf)).toFixed(1), unit: 'h', color: '#6b5b95' },
+    { label: '超时率', value: all.length ? ((overdue / all.length) * 100).toFixed(1) : 0, unit: '%', color: '#c2413a' },
+    { label: '平均满意度', value: avg(sats).toFixed(2), unit: '/5', color: '#c9892f' }
   ]
 })
 
@@ -111,7 +111,7 @@ const durationOption = computed(() => {
     tooltip: { valueFormatter: v => v + ' 小时' },
     xAxis: { type: 'value', splitLine: { lineStyle: { type: 'dashed' } } },
     yAxis: { type: 'category', inverse: true, data: data.map(d => d.t) },
-    series: [{ type: 'bar', barWidth: 12, data: data.map(d => Number(d.h.toFixed(1))), label: { show: true, position: 'right' }, itemStyle: { color: '#7a5af8', borderRadius: [0, 6, 6, 0] } }]
+    series: [{ type: 'bar', barWidth: 12, data: data.map(d => Number(d.h.toFixed(1))), label: { show: true, position: 'right' }, itemStyle: { color: '#6b5b95', borderRadius: [0, 6, 6, 0] } }]
   }
 })
 
@@ -141,9 +141,9 @@ const trendOption = computed(() => {
     xAxis: { type: 'category', data: days.map(d => d.slice(5)) },
     yAxis: [{ type: 'value', name: '单', minInterval: 1 }, { type: 'value', name: '满意度', min: 0, max: 5 }],
     series: [
-      { name: '新建工单', type: 'bar', barGap: 0, barWidth: 8, data: created, itemStyle: { color: '#8ab4ff' } },
-      { name: '完成工单', type: 'bar', barWidth: 8, data: done, itemStyle: { color: '#11b95c' } },
-      { name: '满意度', type: 'line', yAxisIndex: 1, smooth: true, connectNulls: true, data: sat, itemStyle: { color: '#e6a23c' } }
+      { name: '新建工单', type: 'bar', barGap: 0, barWidth: 8, data: created, itemStyle: { color: '#dc9d97' } },
+      { name: '完成工单', type: 'bar', barWidth: 8, data: done, itemStyle: { color: '#3f7a5f' } },
+      { name: '满意度', type: 'line', yAxisIndex: 1, smooth: true, connectNulls: true, data: sat, itemStyle: { color: '#c9892f' } }
     ]
   }
 })
@@ -167,9 +167,9 @@ const staffOption = computed(() => ({
   xAxis: { type: 'category', data: staffTable.value.map(s => s.name) },
   yAxis: [{ type: 'value', name: '单', minInterval: 1 }, { type: 'value', name: '按时率%', max: 100 }],
   series: [
-    { name: '已完成', type: 'bar', stack: 'w', barWidth: 18, data: staffTable.value.map(s => s.finished), itemStyle: { color: '#3b7ad9' } },
-    { name: '在办', type: 'bar', stack: 'w', data: staffTable.value.map(s => s.active), itemStyle: { color: '#e6a23c', borderRadius: [4, 4, 0, 0] } },
-    { name: '按时率', type: 'line', yAxisIndex: 1, data: staffTable.value.map(s => s.onTime), itemStyle: { color: '#11b95c' } }
+    { name: '已完成', type: 'bar', stack: 'w', barWidth: 18, data: staffTable.value.map(s => s.finished), itemStyle: { color: '#b83a2f' } },
+    { name: '在办', type: 'bar', stack: 'w', data: staffTable.value.map(s => s.active), itemStyle: { color: '#c9892f', borderRadius: [4, 4, 0, 0] } },
+    { name: '按时率', type: 'line', yAxisIndex: 1, data: staffTable.value.map(s => s.onTime), itemStyle: { color: '#3f7a5f' } }
   ]
 }))
 
@@ -180,8 +180,8 @@ const damageOption = computed(() => {
   const max = Math.max(4, ...cnt)
   return {
     tooltip: {},
-    radar: { radius: '62%', indicator: DAMAGE_CLASSES.map(name => ({ name, max })), axisName: { color: '#5a6477' } },
-    series: [{ type: 'radar', data: [{ value: cnt, name: '损伤工单数', areaStyle: { color: 'rgba(245,108,108,0.25)' }, itemStyle: { color: '#f56c6c' } }], label: { show: true } }]
+    radar: { radius: '62%', indicator: DAMAGE_CLASSES.map(name => ({ name, max })), axisName: { color: '#5c534c' } },
+    series: [{ type: 'radar', data: [{ value: cnt, name: '损伤工单数', areaStyle: { color: 'rgba(194,65,58,0.2)' }, itemStyle: { color: '#c2413a' } }], label: { show: true } }]
   }
 })
 
@@ -196,7 +196,7 @@ const topOption = computed(() => {
     yAxis: { type: 'category', inverse: true, data: arr.map(a => a[0]), axisLabel: { fontSize: 11 }, axisTick: { show: false } },
     series: [{
       type: 'bar', barWidth: 10, label: { show: true, position: 'right' },
-      data: arr.map((a, i) => ({ value: a[1], itemStyle: { borderRadius: 5, color: i < 3 ? '#f56c6c' : '#ff9f43' } }))
+      data: arr.map((a, i) => ({ value: a[1], itemStyle: { borderRadius: 5, color: i < 3 ? '#c2413a' : '#d97a34' } }))
     }]
   }
 })
@@ -205,7 +205,7 @@ const damageSourceOption = computed(() => {
   const cnt = {}
   damageOrders.value.forEach(o => (cnt[o.source] = (cnt[o.source] || 0) + 1))
   return {
-    color: ['#3b7ad9', '#e6a23c', '#11b95c'],
+    color: ['#b83a2f', '#c9892f', '#3f7a5f'],
     tooltip: { trigger: 'item' },
     legend: { orient: 'vertical', right: 10, top: 'middle' },
     series: [{ type: 'pie', radius: ['45%', '72%'], center: ['35%', '50%'], label: { show: false }, data: Object.entries(cnt).map(([name, value]) => ({ name, value })) }]
@@ -221,26 +221,52 @@ const damageSourceOption = computed(() => {
   margin-bottom: 14px;
 }
 .kpi {
-  background: #fff;
-  border-radius: 8px;
-  padding: 14px 18px;
-  box-shadow: 0 1px 4px rgba(15, 35, 80, 0.06);
-  border-left: 4px solid var(--c);
+  position: relative;
+  overflow: hidden;
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 14px 18px 12px 20px;
+  box-shadow: 0 1px 2px rgba(80, 60, 30, 0.04);
+}
+.kpi::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 14px;
+  bottom: 14px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: var(--c);
+}
+.kpi::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 40px;
+  height: 40px;
+  opacity: 0.1;
+  border: 5px solid var(--c);
+  border-left-color: transparent;
+  box-sizing: border-box;
+  box-shadow: inset 0 0 0 5px #fffdf8, inset 0 0 0 10px var(--c);
 }
 .k-label {
   font-size: 13px;
-  color: #8a94a6;
+  color: #8f857b;
 }
 .k-value {
-  font-size: 26px;
-  font-weight: 700;
+  font-family: var(--font-num);
+  font-size: 28px;
+  font-weight: 600;
   color: var(--c);
   margin-top: 4px;
 }
 .k-value small {
   font-size: 13px;
   font-weight: 400;
-  color: #8a94a6;
+  color: #8f857b;
   margin-left: 3px;
 }
 .grid {
@@ -255,45 +281,61 @@ const damageSourceOption = computed(() => {
   grid-template-columns: 1.2fr 1fr;
 }
 .card {
-  background: #fff;
-  border-radius: 8px;
-  padding: 14px 16px;
-  box-shadow: 0 1px 4px rgba(15, 35, 80, 0.06);
+  position: relative;
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 2px rgba(80, 60, 30, 0.04), 0 4px 14px rgba(80, 60, 30, 0.04);
 }
 .mb {
   margin-bottom: 14px;
 }
 .card-title {
-  font-weight: 600;
-  color: #1f2d3d;
-  padding-left: 8px;
-  border-left: 3px solid #3b7ad9;
-  line-height: 1;
-  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-family: var(--font-title);
+  font-size: 17px;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  color: var(--mo);
+}
+.card-title::before {
+  content: '';
+  flex-shrink: 0;
+  width: 4px;
+  height: 16px;
+  border-radius: 1px;
+  background: linear-gradient(180deg, var(--zhu), var(--zhu-deep));
 }
 .section-title {
   display: flex;
   align-items: baseline;
   gap: 12px;
-  margin: 22px 0 12px;
+  margin: 26px 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #dccfb8;
 }
 .section-title span {
-  font-size: 16px;
-  font-weight: 700;
-  color: #1f2d3d;
+  font-family: var(--font-title);
+  font-size: 19px;
+  letter-spacing: 2px;
+  color: var(--mo);
 }
 .section-title small {
-  color: #8a94a6;
+  color: #8f857b;
 }
 .model {
-  background: #fdf4f4;
+  background: #faefed;
   border-radius: 6px;
   padding: 10px 12px;
   font-size: 12px;
-  color: #5a6477;
+  color: #5c534c;
   line-height: 1.9;
 }
 .model b {
-  color: #f56c6c;
+  color: #c2413a;
 }
 </style>

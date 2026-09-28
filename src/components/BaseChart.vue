@@ -4,7 +4,7 @@
 
 <script>
 import * as echarts from 'echarts'
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 
 export default {
   props: {
@@ -15,27 +15,28 @@ export default {
     },
     height: {
       type: String,
-      default: '400px'
+      default: '100%'
     }
   },
   setup(props) {
     const chartDom = ref(null)
     let chartInstance = null
+    let observer = null
 
     const initChart = () => {
       chartInstance = echarts.init(chartDom.value)
       chartInstance.setOption(props.option)
-      window.addEventListener('resize', handleResize)
+      // 跟随容器尺寸变化（网格布局下，窗口不变时容器也可能变化）
+      observer = new ResizeObserver(() => chartInstance?.resize())
+      observer.observe(chartDom.value)
     }
 
-    const handleResize = () => {
-      chartInstance?.resize()
-    }
+    watch(() => props.option, opt => chartInstance?.setOption(opt, true), { deep: true })
 
     onMounted(initChart)
 
     onBeforeUnmount(() => {
-      window.removeEventListener('resize', handleResize)
+      observer?.disconnect()
       chartInstance?.dispose()
     })
 

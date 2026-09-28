@@ -1,5 +1,6 @@
-import './assets/global.css'
+// 先引入 Element Plus 样式，再引入主题，保证主题变量（朱红主色等）覆盖默认蓝色
 import 'element-plus/dist/index.css'
+import './assets/global.css'
 import * as echarts from 'echarts'
 import { createApp } from 'vue'
 import ElementPlus from 'element-plus'

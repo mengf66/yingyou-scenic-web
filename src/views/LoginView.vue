@@ -1,96 +1,142 @@
 <template>
   <div class="login-page">
-    <!-- 远山与古城剪影 -->
-    <svg class="scene" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-      <defs>
-        <linearGradient id="mt1" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#2a5bb8" stop-opacity=".55" />
-          <stop offset="1" stop-color="#0b2257" stop-opacity=".2" />
-        </linearGradient>
-        <linearGradient id="mt2" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#1d4596" stop-opacity=".8" />
-          <stop offset="1" stop-color="#0a1d4a" stop-opacity=".6" />
-        </linearGradient>
-        <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#1a4ea8" stop-opacity=".5" />
-          <stop offset="1" stop-color="#081a45" />
-        </linearGradient>
-      </defs>
-      <path d="M0 720 L180 560 L320 640 L520 420 L700 610 L860 540 L1040 660 L1260 470 L1440 600 L1620 520 L1920 650 L1920 1080 L0 1080 Z" fill="url(#mt1)" />
-      <path d="M0 800 L240 690 L420 760 L600 660 L820 780 L1080 700 L1300 790 L1520 690 L1760 770 L1920 720 L1920 1080 L0 1080 Z" fill="url(#mt2)" />
-      <!-- 城墙与楼阁 -->
-      <g fill="#0d2a66" opacity=".95">
-        <rect x="0" y="835" width="1920" height="40" />
-        <g v-for="i in 48" :key="i"><rect :x="(i - 1) * 40 + 6" y="822" width="24" height="14" /></g>
-        <!-- 左侧城楼 -->
-        <rect x="470" y="770" width="170" height="66" />
-        <path d="M440 776 L670 776 L640 748 L470 748 Z" />
-        <rect x="495" y="722" width="120" height="28" />
-        <path d="M470 726 L640 726 L612 700 L498 700 Z" />
-        <!-- 中央市楼 -->
-        <rect x="905" y="740" width="110" height="96" />
-        <path d="M872 748 L1048 748 L1020 718 L900 718 Z" />
-        <rect x="925" y="690" width="70" height="30" />
-        <path d="M900 694 L1020 694 L996 668 L924 668 Z" />
-        <rect x="956" y="648" width="8" height="22" />
-        <!-- 右侧城楼 -->
-        <rect x="1290" y="770" width="170" height="66" />
-        <path d="M1260 776 L1490 776 L1460 748 L1290 748 Z" />
-        <rect x="1315" y="722" width="120" height="28" />
-        <path d="M1290 726 L1460 726 L1432 700 L1318 700 Z" />
-      </g>
-      <rect x="0" y="875" width="1920" height="205" fill="url(#water)" />
-      <g stroke="#6fa8ff" stroke-opacity=".25" stroke-width="2" fill="none">
-        <path d="M200 930 Q600 910 960 935 T1720 925" />
-        <path d="M80 985 Q520 965 980 990 T1860 975" />
-      </g>
-    </svg>
-    <div class="rain">
-      <i v-for="i in 18" :key="i" :style="{ left: (i * 5.3) % 100 + '%', animationDelay: (i % 7) * 0.6 + 's', animationDuration: 3 + (i % 4) + 's' }"></i>
-    </div>
+    <!-- 左：国风画卷 -->
+    <section class="scroll">
+      <svg class="scene" viewBox="0 0 960 1080" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#0c1735" />
+            <stop offset=".6" stop-color="#16295a" />
+            <stop offset="1" stop-color="#1d3569" />
+          </linearGradient>
+          <radialGradient id="moon" cx=".5" cy=".5" r=".5">
+            <stop offset="0" stop-color="#fff6dc" />
+            <stop offset=".7" stop-color="#f0d9a2" />
+            <stop offset="1" stop-color="#f0d9a2" stop-opacity="0" />
+          </radialGradient>
+          <linearGradient id="m1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#2f4d8a" />
+            <stop offset="1" stop-color="#18305e" stop-opacity=".2" />
+          </linearGradient>
+          <linearGradient id="m2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#223d74" />
+            <stop offset="1" stop-color="#132652" />
+          </linearGradient>
+          <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#a8823f" />
+            <stop offset=".5" stop-color="#f0d9a2" />
+            <stop offset="1" stop-color="#a8823f" />
+          </linearGradient>
+        </defs>
+        <rect width="960" height="1080" fill="url(#sky)" />
+        <circle cx="690" cy="250" r="120" fill="url(#moon)" opacity=".9" />
+        <!-- 云纹 -->
+        <g fill="none" stroke="#d9b36a" stroke-opacity=".35" stroke-width="2">
+          <path d="M80 300 q40 -40 80 0 q40 -40 80 0 q20 -24 46 -6" />
+          <path d="M520 380 q30 -30 60 0 q30 -30 60 0" />
+        </g>
+        <!-- 远山 -->
+        <path d="M0 680 L120 560 L230 620 L380 460 L520 600 L640 520 L780 640 L960 540 V1080 H0Z" fill="url(#m1)" opacity=".7" />
+        <path d="M0 760 L160 670 L300 730 L460 640 L620 740 L800 670 L960 720 V1080 H0Z" fill="url(#m2)" />
+        <!-- 城墙与楼阁 -->
+        <g fill="#0c1a3c">
+          <rect x="0" y="800" width="960" height="60" />
+          <g v-for="i in 32" :key="i"><rect :x="(i - 1) * 30 + 4" y="786" width="18" height="16" /></g>
+          <!-- 市楼（平遥古城地标） -->
+          <rect x="400" y="680" width="160" height="122" />
+          <path d="M350 692 L610 692 L574 652 L386 652 Z" />
+          <rect x="428" y="610" width="104" height="44" />
+          <path d="M392 620 L568 620 L540 586 L420 586 Z" />
+          <rect x="452" y="552" width="56" height="36" />
+          <path d="M428 560 L532 560 L512 530 L448 530 Z" />
+          <rect x="477" y="506" width="6" height="26" />
+          <!-- 城门洞 -->
+          <path d="M456 802 V744 Q480 718 504 744 V802 Z" fill="#1e3669" />
+          <!-- 左右角楼 -->
+          <rect x="90" y="740" width="110" height="62" />
+          <path d="M66 748 L224 748 L200 722 L90 722 Z" />
+          <rect x="760" y="740" width="110" height="62" />
+          <path d="M736 748 L894 748 L870 722 L760 722 Z" />
+        </g>
+        <!-- 金色描边 -->
+        <path d="M350 692 L386 652 L574 652 L610 692 M392 620 L420 586 L540 586 L568 620 M428 560 L448 530 L512 530 L532 560" fill="none" stroke="url(#gold)" stroke-width="2" />
+        <path d="M0 800 H960" stroke="url(#gold)" stroke-width="1.5" opacity=".6" />
+        <!-- 灯笼 -->
+        <g v-for="(x, i) in [370, 590, 150, 810]" :key="i" :transform="`translate(${x} ${i < 2 ? 700 : 756})`">
+          <line x1="0" y1="-8" x2="0" y2="0" stroke="#d9b36a" />
+          <ellipse cx="0" cy="10" rx="9" ry="11" fill="#c9483a" class="lantern" />
+          <rect x="-4" y="20" width="8" height="3" fill="#d9b36a" />
+        </g>
+        <rect x="0" y="860" width="960" height="220" fill="#0b1633" />
+        <g stroke="#d9b36a" stroke-opacity=".18" stroke-width="2" fill="none">
+          <path d="M60 920 Q300 900 520 925 T920 915" />
+          <path d="M20 980 Q260 960 500 985 T940 970" />
+        </g>
+      </svg>
+      <div class="scroll-text">
+        <h2>应游晋游</h2>
+        <p class="slogan">千年古城 · 智慧文旅</p>
+        <p class="desc">黄河流域古城文旅融合创意服务平台</p>
+      </div>
+      <div class="vertical">筑兴三乡　游治共创</div>
+    </section>
 
-    <div class="card">
-      <h1>山西智慧旅游大数据中心</h1>
-      <p class="sub">Shanxi Smart Tourism Big Data Center</p>
-
-      <el-form v-if="mode === 'login'" ref="loginRef" :model="loginForm" :rules="loginRules" size="large" @submit.prevent="onLogin">
-        <el-form-item prop="username">
-          <el-input v-model="loginForm.username" placeholder="用户名" :prefix-icon="User" clearable />
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input v-model="loginForm.password" type="password" placeholder="密码" :prefix-icon="Lock" show-password @keyup.enter="onLogin" />
-        </el-form-item>
-        <div class="row">
-          <el-checkbox v-model="remember">记住账号</el-checkbox>
-          <span class="hint">演示账号 admin / 123456</span>
+    <!-- 右：登录 -->
+    <section class="panel">
+      <div class="card">
+        <div class="head">
+          <span class="seal">晋</span>
+          <div>
+            <h1>山西智慧旅游大数据中心</h1>
+            <p class="sub">景区端 · 运营管理平台</p>
+          </div>
         </div>
-        <el-button type="primary" class="submit" :loading="loading" @click="onLogin">登 录</el-button>
-        <div class="switch">还没有账号？<a @click="mode = 'register'">立即注册</a></div>
-      </el-form>
 
-      <el-form v-else ref="regRef" :model="regForm" :rules="regRules" size="large">
-        <el-form-item prop="username">
-          <el-input v-model="regForm.username" placeholder="用户名（4-16 位字母/数字）" :prefix-icon="User" />
-        </el-form-item>
-        <el-form-item prop="nickname">
-          <el-input v-model="regForm.nickname" placeholder="姓名 / 昵称" :prefix-icon="Postcard" />
-        </el-form-item>
-        <el-form-item prop="scenic">
-          <el-select v-model="regForm.scenic" placeholder="所属景区" style="width: 100%">
-            <el-option v-for="s in SCENICS" :key="s" :label="s" :value="s" />
-          </el-select>
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input v-model="regForm.password" type="password" placeholder="密码（至少 6 位）" :prefix-icon="Lock" show-password />
-        </el-form-item>
-        <el-form-item prop="confirm">
-          <el-input v-model="regForm.confirm" type="password" placeholder="确认密码" :prefix-icon="Lock" show-password />
-        </el-form-item>
-        <el-button type="primary" class="submit" :loading="loading" @click="onRegister">注 册</el-button>
-        <div class="switch">已有账号？<a @click="mode = 'login'">返回登录</a></div>
-      </el-form>
-    </div>
-    <div class="copyright">应游晋游 · 黄河流域古城文旅融合创意服务平台 · 景区端</div>
+        <div class="switch-tabs">
+          <span :class="{ on: mode === 'login' }" @click="mode = 'login'">账号登录</span>
+          <span :class="{ on: mode === 'register' }" @click="mode = 'register'">注册账号</span>
+        </div>
+
+        <el-form v-if="mode === 'login'" ref="loginRef" :model="loginForm" :rules="loginRules" size="large" @submit.prevent="onLogin">
+          <el-form-item prop="username">
+            <el-input v-model="loginForm.username" placeholder="用户名" :prefix-icon="User" clearable />
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input v-model="loginForm.password" type="password" placeholder="密码" :prefix-icon="Lock" show-password @keyup.enter="onLogin" />
+          </el-form-item>
+          <div class="row">
+            <el-checkbox v-model="remember">记住账号</el-checkbox>
+            <span class="hint">演示账号 admin / 123456</span>
+          </div>
+          <el-button type="primary" class="submit" :loading="loading" @click="onLogin">登　录</el-button>
+        </el-form>
+
+        <el-form v-else ref="regRef" :model="regForm" :rules="regRules" size="large">
+          <el-form-item prop="username">
+            <el-input v-model="regForm.username" placeholder="用户名（4-16 位字母/数字）" :prefix-icon="User" />
+          </el-form-item>
+          <el-form-item prop="nickname">
+            <el-input v-model="regForm.nickname" placeholder="姓名 / 昵称" :prefix-icon="Postcard" />
+          </el-form-item>
+          <el-form-item prop="scenic">
+            <el-select v-model="regForm.scenic" placeholder="所属景区" style="width: 100%">
+              <el-option v-for="s in SCENICS" :key="s" :label="s" :value="s" />
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input v-model="regForm.password" type="password" placeholder="密码（至少 6 位）" :prefix-icon="Lock" show-password />
+          </el-form-item>
+          <el-form-item prop="confirm">
+            <el-input v-model="regForm.confirm" type="password" placeholder="确认密码" :prefix-icon="Lock" show-password />
+          </el-form-item>
+          <el-button type="primary" class="submit" :loading="loading" @click="onRegister">注　册</el-button>
+        </el-form>
+
+        <div class="foot">
+          <span>© 应游晋游团队 · 景区端</span>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -167,13 +213,18 @@ async function onRegister() {
 
 <style scoped>
 .login-page {
-  position: relative;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
   height: 100vh;
+  min-height: 640px;
+  background: var(--xuan);
+}
+
+/* ---------- 左：画卷 ---------- */
+.scroll {
+  position: relative;
   overflow: hidden;
-  background: #0a1d4a url('../assets/background.png') center / cover no-repeat;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: #0c1735;
 }
 .scene {
   position: absolute;
@@ -181,89 +232,179 @@ async function onRegister() {
   width: 100%;
   height: 100%;
 }
-.rain i {
-  position: absolute;
-  top: -20%;
-  width: 1px;
-  height: 90px;
-  background: linear-gradient(to bottom, transparent, rgba(160, 200, 255, 0.55));
-  animation: fall linear infinite;
+.lantern {
+  animation: glow 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(233, 110, 80, 0.8));
 }
-@keyframes fall {
-  to { transform: translateY(130vh); }
+@keyframes glow {
+  50% { opacity: 0.75; }
+}
+.scroll-text {
+  position: absolute;
+  left: 9%;
+  top: 14%;
+  color: #f0d9a2;
+}
+.scroll-text h2 {
+  margin: 0;
+  font-family: var(--font-brush);
+  font-size: 84px;
+  font-weight: normal;
+  letter-spacing: 12px;
+  line-height: 1.1;
+  background: linear-gradient(180deg, #fff6dc 0%, #f0d9a2 50%, #c9a45c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+}
+.slogan {
+  margin: 14px 0 6px 4px;
+  font-family: var(--font-title);
+  font-size: 22px;
+  letter-spacing: 8px;
+  color: #e9dfc8;
+}
+.desc {
+  margin: 0 0 0 4px;
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: rgba(233, 223, 200, 0.55);
+}
+.vertical {
+  position: absolute;
+  right: 7%;
+  top: 12%;
+  writing-mode: vertical-rl;
+  font-family: var(--font-title);
+  font-size: 18px;
+  letter-spacing: 10px;
+  color: rgba(240, 217, 162, 0.7);
+  padding: 14px 8px;
+  border-left: 1px solid rgba(217, 179, 106, 0.4);
+  border-right: 1px solid rgba(217, 179, 106, 0.4);
+}
+
+/* ---------- 右：登录卡 ---------- */
+.panel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 90% 10%, rgba(201, 164, 92, 0.12), transparent 320px),
+    radial-gradient(circle at 10% 95%, rgba(184, 58, 47, 0.06), transparent 300px),
+    var(--xuan);
+}
+.panel::before {
+  /* 回纹边框 */
+  content: '';
+  position: absolute;
+  inset: 28px;
+  border: 1px solid #e0d3bb;
+  pointer-events: none;
 }
 .card {
   position: relative;
-  z-index: 2;
-  width: 400px;
-  padding: 36px 36px 24px;
-  border-radius: 10px;
-  background: rgba(38, 66, 128, 0.55);
-  border: 1px solid rgba(140, 180, 255, 0.35);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45), inset 0 0 30px rgba(90, 150, 255, 0.15);
-  backdrop-filter: blur(6px);
-  margin-top: -6vh;
+  width: 420px;
+}
+.head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+.seal {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  font-family: var(--font-brush);
+  font-size: 32px;
+  color: #fff6e6;
+  background: linear-gradient(135deg, #c9483a, #962c23);
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 3px rgba(255, 246, 230, 0.35), 0 4px 10px rgba(150, 44, 35, 0.3);
 }
 h1 {
   margin: 0;
-  text-align: center;
-  font-size: 24px;
-  letter-spacing: 4px;
-  color: #fff;
-  font-family: 'STKaiti', 'KaiTi', serif;
+  font-family: var(--font-brush);
+  font-size: 27px;
+  font-weight: normal;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  color: var(--mo);
 }
 .sub {
-  margin: 6px 0 26px;
-  text-align: center;
-  font-size: 12px;
-  color: rgba(200, 220, 255, 0.7);
-  letter-spacing: 1px;
+  margin: 4px 0 0;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: var(--mo-3);
+}
+.switch-tabs {
+  display: flex;
+  gap: 28px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+}
+.switch-tabs span {
+  position: relative;
+  padding-bottom: 10px;
+  font-family: var(--font-title);
+  font-size: 17px;
+  letter-spacing: 2px;
+  color: var(--mo-3);
+  cursor: pointer;
+}
+.switch-tabs span.on {
+  color: var(--zhu);
+}
+.switch-tabs span.on::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--zhu);
 }
 .card :deep(.el-input__wrapper),
 .card :deep(.el-select__wrapper) {
-  background: rgba(10, 30, 80, 0.55);
-  box-shadow: 0 0 0 1px rgba(140, 180, 255, 0.35) inset;
+  background: #fffdf8;
+  box-shadow: 0 0 0 1px #ddd2bf inset;
 }
-.card :deep(.el-input__inner),
-.card :deep(.el-select__selected-item) {
-  color: #e8f0ff;
-}
-.card :deep(.el-checkbox__label) {
-  color: #cfe0ff;
+.card :deep(.el-input__wrapper.is-focus),
+.card :deep(.el-select__wrapper.is-focused) {
+  box-shadow: 0 0 0 1px var(--zhu) inset;
 }
 .row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: -6px 0 16px;
+  margin: -6px 0 18px;
 }
 .hint {
   font-size: 12px;
-  color: rgba(200, 220, 255, 0.6);
+  color: var(--mo-3);
 }
 .submit {
   width: 100%;
+  height: 44px;
+  font-family: var(--font-title);
+  font-size: 18px;
   letter-spacing: 6px;
-  background: linear-gradient(90deg, #2f6fe0, #3f8cff);
+  background: linear-gradient(180deg, #c9483a, #a3342a);
   border: none;
+  box-shadow: 0 6px 14px rgba(150, 44, 35, 0.25);
 }
-.switch {
-  margin-top: 16px;
-  text-align: center;
-  font-size: 13px;
-  color: rgba(200, 220, 255, 0.75);
+.submit:hover {
+  background: linear-gradient(180deg, #d4584a, #b03a2f);
 }
-.switch a {
-  color: #7fb2ff;
-  cursor: pointer;
-}
-.copyright {
-  position: absolute;
-  bottom: 18px;
-  width: 100%;
+.foot {
+  margin-top: 36px;
   text-align: center;
   font-size: 12px;
-  color: rgba(200, 220, 255, 0.45);
-  z-index: 2;
+  color: var(--mo-3);
 }
 </style>

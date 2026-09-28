@@ -204,11 +204,11 @@ const summary = computed(() => {
   const a = all.value
   const neg = a.filter(f => f.analysis.sentiment === 'negative').length
   return [
-    { label: '反馈总数', value: a.length, unit: '条', sub: `游客 ${a.filter(f => f.source === '游客').length} · 商户 ${a.filter(f => f.source === '商户').length} · 员工 ${a.filter(f => f.source === '工作人员').length}`, color: '#3b7ad9' },
-    { label: '待处理', value: a.filter(f => f.status === '待处理').length, unit: '条', sub: '需确认并派单', color: '#e6a23c' },
-    { label: '今日新增', value: a.filter(f => f.createdAt.startsWith(today)).length, unit: '条', sub: '实时接收三端反馈', color: '#11b95c' },
-    { label: '满意度指数', value: satisfactionOf(a), unit: '分', sub: '基于情感得分折算（0-100）', color: '#7a5af8' },
-    { label: '负面舆情占比', value: a.length ? ((neg / a.length) * 100).toFixed(1) : 0, unit: '%', sub: `负面 ${neg} 条`, color: '#f56c6c' }
+    { label: '反馈总数', value: a.length, unit: '条', sub: `游客 ${a.filter(f => f.source === '游客').length} · 商户 ${a.filter(f => f.source === '商户').length} · 员工 ${a.filter(f => f.source === '工作人员').length}`, color: '#b83a2f' },
+    { label: '待处理', value: a.filter(f => f.status === '待处理').length, unit: '条', sub: '需确认并派单', color: '#c9892f' },
+    { label: '今日新增', value: a.filter(f => f.createdAt.startsWith(today)).length, unit: '条', sub: '实时接收三端反馈', color: '#3f7a5f' },
+    { label: '满意度指数', value: satisfactionOf(a), unit: '分', sub: '基于情感得分折算（0-100）', color: '#6b5b95' },
+    { label: '负面舆情占比', value: a.length ? ((neg / a.length) * 100).toFixed(1) : 0, unit: '%', sub: `负面 ${neg} 条`, color: '#c2413a' }
   ]
 })
 
@@ -216,14 +216,14 @@ const summary = computed(() => {
 const sourceOption = computed(() => ({
   tooltip: { trigger: 'item' },
   legend: { bottom: 0, itemWidth: 10, itemHeight: 10 },
-  color: ['#3b7ad9', '#11b95c', '#e6a23c'],
+  color: ['#b83a2f', '#3f7a5f', '#c9892f'],
   series: [{ type: 'pie', radius: ['36%', '58%'], center: ['50%', '44%'], label: { formatter: '{b}\n{d}%', overflow: 'none' }, data: SOURCES.map(s => ({ name: s, value: all.value.filter(f => f.source === s).length })) }]
 }))
 
 const sentimentOption = computed(() => ({
   tooltip: { trigger: 'item' },
   legend: { bottom: 0, itemWidth: 10, itemHeight: 10 },
-  color: ['#11b95c', '#909399', '#f56c6c'],
+  color: ['#3f7a5f', '#a39a8f', '#c2413a'],
   series: [{ type: 'pie', roseType: 'radius', radius: ['18%', '58%'], center: ['50%', '44%'], label: { formatter: '{b} {c}', overflow: 'none' }, data: ['positive', 'neutral', 'negative'].map(k => ({ name: SENT[k].name, value: all.value.filter(f => f.analysis.sentiment === k).length })) }]
 }))
 
@@ -233,8 +233,8 @@ const wordOption = computed(() => {
   return {
     tooltip: {},
     series: [{
-      type: 'wordCloud', sizeRange: [12, 34], rotationRange: [0, 0], gridSize: 6, width: '100%', height: '100%',
-      textStyle: { color: () => ['#3b7ad9', '#11b95c', '#e6a23c', '#f56c6c', '#7a5af8', '#1bb2c4'][Math.floor(Math.random() * 6)] },
+      type: 'wordCloud', sizeRange: [13, 38], rotationRange: [0, 0], gridSize: 6, width: '100%', height: '100%',
+      textStyle: { fontFamily: 'JinTitle, STKaiti, KaiTi, serif', color: p => ['#b83a2f', '#2b3a4a', '#a88340', '#3f7a5f', '#6b5b95', '#3d7f8c'][p.dataIndex % 6] },
       data: Object.entries(cnt).map(([name, value]) => ({ name, value }))
     }]
   }
@@ -249,7 +249,7 @@ const topOption = computed(() => {
     tooltip: {},
     xAxis: { type: 'value', minInterval: 1, splitLine: { lineStyle: { type: 'dashed' } } },
     yAxis: { type: 'category', data: top.map(t => t[0]) },
-    series: [{ type: 'bar', barWidth: 14, data: top.map(t => t[1]), label: { show: true, position: 'right' }, itemStyle: { borderRadius: [0, 7, 7, 0], color: { type: 'linear', x: 0, y: 0, x2: 1, y2: 0, colorStops: [{ offset: 0, color: '#8ab4ff' }, { offset: 1, color: '#3b7ad9' }] } } }]
+    series: [{ type: 'bar', barWidth: 14, data: top.map(t => t[1]), label: { show: true, position: 'right' }, itemStyle: { borderRadius: [0, 7, 7, 0], color: { type: 'linear', x: 0, y: 0, x2: 1, y2: 0, colorStops: [{ offset: 0, color: '#e6d3b0' }, { offset: 1, color: '#a88340' }] } } }]
   }
 })
 
@@ -267,8 +267,8 @@ const trendOption = computed(() => {
     xAxis: { type: 'category', data: days.map(d => d.slice(5)) },
     yAxis: [{ type: 'value', name: '条', minInterval: 1 }, { type: 'value', name: '满意度', min: 0, max: 100 }],
     series: [
-      { name: '反馈量', type: 'bar', barWidth: 12, data: byDay.map(a => a.length), itemStyle: { color: '#c6d8fb', borderRadius: [4, 4, 0, 0] } },
-      { name: '满意度', type: 'line', yAxisIndex: 1, smooth: true, data: sat, itemStyle: { color: '#7a5af8' }, areaStyle: { color: 'rgba(122,90,248,0.12)' } }
+      { name: '反馈量', type: 'bar', barWidth: 12, data: byDay.map(a => a.length), itemStyle: { color: '#e3d3b5', borderRadius: [4, 4, 0, 0] } },
+      { name: '满意度', type: 'line', yAxisIndex: 1, smooth: true, data: sat, itemStyle: { color: '#b83a2f' }, lineStyle: { width: 2.5 }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(184,58,47,0.18)' }, { offset: 1, color: 'rgba(184,58,47,0)' }] } } }
     ]
   }
 })
@@ -323,19 +323,45 @@ const statusTag = s => ({ 待处理: 'warning', 已派单: 'primary', 已完成:
   margin-bottom: 14px;
 }
 .stat {
-  background: #fff;
-  border-radius: 8px;
-  padding: 14px 18px;
-  border-top: 3px solid var(--c);
-  box-shadow: 0 1px 4px rgba(15, 35, 80, 0.06);
+  position: relative;
+  overflow: hidden;
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 14px 18px 12px 20px;
+  box-shadow: 0 1px 2px rgba(80, 60, 30, 0.04);
+}
+.stat::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 14px;
+  bottom: 14px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: var(--c);
+}
+.stat::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 40px;
+  height: 40px;
+  opacity: 0.1;
+  border: 5px solid var(--c);
+  border-left-color: transparent;
+  box-sizing: border-box;
+  box-shadow: inset 0 0 0 5px #fffdf8, inset 0 0 0 10px var(--c);
 }
 .stat-label {
-  color: #8a94a6;
+  color: #8f857b;
   font-size: 13px;
 }
 .stat-value {
-  font-size: 28px;
-  font-weight: 700;
+  font-family: var(--font-num);
+  font-size: 30px;
+  font-weight: 600;
   color: var(--c);
   margin: 6px 0 2px;
 }
@@ -343,11 +369,11 @@ const statusTag = s => ({ 待处理: 'warning', 已派单: 'primary', 已完成:
   font-size: 13px;
   margin-left: 4px;
   font-weight: 400;
-  color: #8a94a6;
+  color: #8f857b;
 }
 .stat-sub {
   font-size: 12px;
-  color: #a0a8b8;
+  color: #a39a8f;
 }
 .charts {
   display: grid;
@@ -356,21 +382,34 @@ const statusTag = s => ({ 待处理: 'warning', 已派单: 'primary', 已完成:
   margin-bottom: 14px;
 }
 .card {
-  background: #fff;
-  border-radius: 8px;
-  padding: 14px 16px;
-  box-shadow: 0 1px 4px rgba(15, 35, 80, 0.06);
+  position: relative;
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 2px rgba(80, 60, 30, 0.04), 0 4px 14px rgba(80, 60, 30, 0.04);
 }
 .card.trend {
   margin-bottom: 14px;
 }
 .card-title {
-  font-weight: 600;
-  color: #1f2d3d;
-  margin-bottom: 6px;
-  padding-left: 8px;
-  border-left: 3px solid #3b7ad9;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-family: var(--font-title);
+  font-size: 17px;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  color: var(--mo);
+}
+.card-title::before {
+  content: '';
+  flex-shrink: 0;
+  width: 4px;
+  height: 16px;
+  border-radius: 1px;
+  background: linear-gradient(180deg, var(--zhu), var(--zhu-deep));
 }
 .toolbar {
   display: flex;
@@ -381,17 +420,19 @@ const statusTag = s => ({ 待处理: 'warning', 已派单: 'primary', 已完成:
   flex: 1;
 }
 .sub {
-  color: #a0a8b8;
+  color: #a39a8f;
   font-size: 12px;
 }
 .kw {
   display: inline-block;
-  padding: 0 6px;
+  padding: 0 7px;
   margin: 2px 4px 2px 0;
   font-size: 12px;
-  border-radius: 3px;
-  background: #eef4ff;
-  color: #3b7ad9;
+  line-height: 20px;
+  border-radius: 2px;
+  background: #f3ece0;
+  color: #7a5a2e;
+  border: 1px solid #e6d8bf;
 }
 .pager {
   margin-top: 12px;
@@ -401,7 +442,7 @@ const statusTag = s => ({ 待处理: 'warning', 已派单: 'primary', 已完成:
   margin: 20px 0 10px;
 }
 .muted {
-  color: #a0a8b8;
+  color: #a39a8f;
   font-size: 12px;
   margin-left: 8px;
 }

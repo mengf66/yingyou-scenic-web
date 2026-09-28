@@ -41,3 +41,8 @@ npm run build      # 打包到 dist/
 VITE_TMAP_KEY=你的腾讯位置服务Key
 VITE_API_BASE=http://你的后端地址/
 ```
+
+## 界面风格
+
+采用「国风古城」主题：大屏为靛蓝底 + 鎏金描边，管理页为宣纸米白底 + 朱红主色 + 黛青侧栏。
+颜色、字体等统一定义在 `src/assets/global.css`（大屏图表配色在 `src/components/screen/theme.js`），改主题只需改这两个文件。

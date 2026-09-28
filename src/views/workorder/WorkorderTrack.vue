@@ -69,7 +69,7 @@
                 <div class="tl-desc">{{ s.desc || '—' }}</div>
                 <el-image v-for="(img, i) in s.images" :key="i" :src="img" :preview-src-list="s.images" fit="cover" class="thumb" />
               </el-timeline-item>
-              <el-timeline-item :timestamp="current.createdAt" placement="top" color="#3b7ad9">
+              <el-timeline-item :timestamp="current.createdAt" placement="top" color="#b83a2f">
                 <div class="tl-name">工单创建并派发</div>
               </el-timeline-item>
             </el-timeline>
@@ -244,10 +244,12 @@ const priorityTag = p => ({ 紧急: 'danger', 高: 'warning', 中: 'primary', �
   align-items: flex-start;
 }
 .card {
-  background: #fff;
-  border-radius: 8px;
-  padding: 14px 16px;
-  box-shadow: 0 1px 4px rgba(15, 35, 80, 0.06);
+  position: relative;
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 2px rgba(80, 60, 30, 0.04), 0 4px 14px rgba(80, 60, 30, 0.04);
 }
 .list-card {
   width: 320px;
@@ -265,21 +267,21 @@ const priorityTag = p => ({ 紧急: 'danger', 高: 'warning', 中: 'primary', �
   font-size: 12px;
   padding: 3px 8px;
   border-radius: 12px;
-  background: #f2f5fa;
-  color: #5a6477;
+  background: #f1ebdf;
+  color: #5c534c;
   cursor: pointer;
 }
 .sf em {
   font-style: normal;
   margin-left: 3px;
-  color: #a0a8b8;
+  color: #a39a8f;
 }
 .sf.on {
-  background: #3b7ad9;
+  background: #b83a2f;
   color: #fff;
 }
 .sf.on em {
-  color: #dbe7ff;
+  color: #f6dcd8;
 }
 .orders {
   max-height: calc(100vh - 290px);
@@ -287,17 +289,17 @@ const priorityTag = p => ({ 紧急: 'danger', 高: 'warning', 中: 'primary', �
 }
 .order {
   padding: 10px 12px;
-  border: 1px solid #edf0f5;
+  border: 1px solid #ece3d3;
   border-radius: 6px;
   margin-bottom: 8px;
   cursor: pointer;
 }
 .order:hover {
-  border-color: #b9cff5;
+  border-color: #e5b8b2;
 }
 .order.on {
-  border-color: #3b7ad9;
-  background: #f4f8ff;
+  border-color: #b83a2f;
+  background: #fbf1ee;
 }
 .o-top {
   display: flex;
@@ -306,12 +308,12 @@ const priorityTag = p => ({ 紧急: 'danger', 高: 'warning', 中: 'primary', �
 }
 .o-id {
   font-size: 12px;
-  color: #8a94a6;
+  color: #8f857b;
   font-family: Consolas, monospace;
 }
 .o-title {
   font-weight: 600;
-  color: #1f2d3d;
+  color: #2a2522;
   margin: 4px 0;
   font-size: 14px;
 }
@@ -319,16 +321,16 @@ const priorityTag = p => ({ 紧急: 'danger', 高: 'warning', 中: 'primary', �
   display: flex;
   gap: 10px;
   font-size: 12px;
-  color: #8a94a6;
+  color: #8f857b;
 }
 .o-stage {
-  color: #3b7ad9;
+  color: #b83a2f;
 }
 .o-stage.finished {
-  color: #11b95c;
+  color: #3f7a5f;
 }
 .overdue {
-  color: #f56c6c !important;
+  color: #c2413a !important;
 }
 .detail-card {
   flex: 1;
@@ -342,14 +344,18 @@ const priorityTag = p => ({ 紧急: 'danger', 高: 'warning', 中: 'primary', �
 }
 .d-head h3 {
   margin: 0 0 6px;
-  color: #1f2d3d;
+  font-family: var(--font-title);
+  font-size: 21px;
+  font-weight: normal;
+  letter-spacing: 1px;
+  color: #2a2522;
 }
 .d-meta {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
   font-size: 12px;
-  color: #8a94a6;
+  color: #8f857b;
 }
 .flow {
   margin: 22px 0;
@@ -367,7 +373,7 @@ const priorityTag = p => ({ 紧急: 'danger', 高: 'warning', 中: 'primary', �
 .action {
   width: 380px;
   flex-shrink: 0;
-  background: #f8fafd;
+  background: #f9f4ea;
   border-radius: 6px;
   padding: 14px 16px;
 }
@@ -377,20 +383,30 @@ const priorityTag = p => ({ 紧急: 'danger', 高: 'warning', 中: 'primary', �
   justify-content: center;
 }
 .sec-title {
-  font-weight: 600;
-  color: #1f2d3d;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 12px;
-  padding-left: 8px;
-  border-left: 3px solid #3b7ad9;
-  line-height: 1;
+  font-family: var(--font-title);
+  font-size: 16px;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  color: var(--mo);
+}
+.sec-title::before {
+  content: '';
+  width: 4px;
+  height: 15px;
+  border-radius: 1px;
+  background: var(--zhu);
 }
 .tl-name {
   font-weight: 600;
-  color: #1f2d3d;
+  color: #2a2522;
 }
 .tl-desc {
   font-size: 13px;
-  color: #5a6477;
+  color: #5c534c;
   margin: 4px 0;
 }
 .thumb {
