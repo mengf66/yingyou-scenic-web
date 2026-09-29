@@ -6,6 +6,8 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
+  // 资源用相对路径：部署在站点根目录或子目录都能访问（路由是 hash 模式，不受影响）
+  base: './',
   plugins: [
     vue(),
     vueDevTools(),

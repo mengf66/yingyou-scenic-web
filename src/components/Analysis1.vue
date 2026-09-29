@@ -315,4 +315,46 @@ export default {
 .flow-tag.ok { color: #5fb3a1; border: 1px solid rgba(95, 179, 161, 0.5); }
 .flow-tag.warm { color: #e8cf94; border: 1px solid rgba(232, 207, 148, 0.5); }
 .flow-tag.hot { color: #e07a64; border: 1px solid rgba(224, 122, 100, 0.6); }
+
+/* ---------- 手机：单列纵向排布 ---------- */
+@media (max-width: 900px) {
+  .screen-grid {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    gap: 12px;
+  }
+  .col {
+    gap: 12px;
+  }
+  .col > .panel {
+    flex: none;
+    height: 260px;
+  }
+  .col > .map-panel {
+    height: 440px;
+  }
+  .col > .r-4 {
+    height: 330px;
+  }
+  .map-panel :deep(.panel-head) {
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+  .map-panel :deep(.extra) {
+    margin-left: 0;
+    width: 100%;
+  }
+  .kpi-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .kpi-value {
+    font-size: 19px;
+  }
+  .flow {
+    grid-template-columns: 60px 1fr 48px 36px;
+    gap: 6px;
+  }
+}
 </style>

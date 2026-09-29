@@ -13,7 +13,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 export default {
   setup() {
     const currentTime = ref('')
-    const weatherIcon = ref('/sunny.svg')
+    const weatherIcon = ref(import.meta.env.BASE_URL + 'sunny.svg')
     const temperature = ref(26)
     const aqi = ref(45)
     let timer = null

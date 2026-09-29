@@ -189,7 +189,7 @@ export default {
     const trendOption = computed(() => ({
       tooltip: tooltip({ trigger: 'axis' }),
       legend: legend({ top: 0, right: 0, icon: 'circle' }),
-      grid: { top: 28, bottom: 4, left: 4, right: 10, containLabel: true },
+      grid: { top: 28, bottom: 4, left: 4, right: 28, containLabel: true },
       xAxis: axis({ type: 'category', boundaryGap: false, data: days }),
       yAxis: axis({ type: 'value', axisLine: { show: false } }),
       series: [
@@ -403,5 +403,35 @@ export default {
   font-size: 13px;
   line-height: 1.7;
   color: #cfd6e4;
+}
+
+/* ---------- 手机：单列纵向排布 ---------- */
+@media (max-width: 900px) {
+  .screen-grid {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    gap: 12px;
+  }
+  .col {
+    gap: 12px;
+  }
+  .col > .panel {
+    flex: none;
+    height: 280px;
+  }
+  .col > .stats-panel {
+    height: 300px;
+  }
+  .col > .r-cloud {
+    height: 340px;
+  }
+  .col > .r-comments {
+    height: 440px;
+  }
+  .topic {
+    grid-template-columns: 20px 70px 1fr 34px 42px;
+    gap: 6px;
+  }
 }
 </style>

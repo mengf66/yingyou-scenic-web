@@ -29,9 +29,10 @@
           <path d="M92 82 H668" stroke="url(#eaveGold)" stroke-width="1" opacity=".6" />
         </svg>
         <div class="title">
-          <span class="ornament">◆</span>
+          <span class="ornament left" aria-hidden="true"></span>
+          <img class="logo" :src="sealLogo" alt="应游晋游" width="40" height="40" />
           <h1>山西智慧旅游大数据中心</h1>
-          <span class="ornament">◆</span>
+          <span class="ornament right" aria-hidden="true"></span>
         </div>
         <div class="subtitle">应游晋游 · 黄河流域古城文旅融合创意服务平台</div>
       </div>
@@ -55,6 +56,7 @@ import { useRouter } from 'vue-router'
 import Analysis1 from '@/components/Analysis1.vue'
 import Analysis2 from '@/components/Analysis2.vue'
 import Analysis3 from '@/components/Analysis3.vue'
+import sealLogo from '@/assets/guofeng/seal-logo.webp'
 
 const TABS = ['综合分析', '舆情分析', '商户经营']
 const components = [Analysis1, Analysis2, Analysis3]
@@ -79,26 +81,32 @@ onMounted(() => document.addEventListener('fullscreenchange', onFs))
 onBeforeUnmount(() => document.removeEventListener('fullscreenchange', onFs))
 </script>
 
+
 <style scoped>
 .screen {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100vh;
   min-height: 720px;
   overflow: hidden;
   color: var(--screen-text);
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(217, 179, 106, 0.12), transparent 55%),
-    radial-gradient(ellipse at 50% 100%, rgba(40, 80, 150, 0.35), transparent 60%),
-    linear-gradient(180deg, #0c1735 0%, #0a1330 100%);
+  background-color: #0b1530;
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(217, 179, 106, 0.1), transparent 50%),
+    linear-gradient(180deg, rgba(10, 19, 48, 0.25) 0%, rgba(10, 19, 48, 0) 40%),
+    url('@/assets/guofeng/screen-bg.webp');
+  background-size: auto, auto, cover;
+  background-position: center, center, center bottom;
+  background-repeat: no-repeat;
 }
 .screen::before {
-  /* 回纹底纹 */
+  /* 极淡的方格暗纹，增加纵深 */
   content: '';
-  position: fixed;
+  position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.035;
+  opacity: 0.025;
   background-image:
     linear-gradient(90deg, #d9b36a 1px, transparent 1px),
     linear-gradient(#d9b36a 1px, transparent 1px);
@@ -112,7 +120,7 @@ onBeforeUnmount(() => document.removeEventListener('fullscreenchange', onFs))
   grid-template-columns: 1fr 760px 1fr;
   align-items: start;
   flex-shrink: 0;
-  height: 88px;
+  height: 90px;
   padding: 0 22px;
 }
 .header::after {
@@ -122,7 +130,7 @@ onBeforeUnmount(() => document.removeEventListener('fullscreenchange', onFs))
   right: 22px;
   top: 44px;
   height: 1px;
-  background: linear-gradient(90deg, rgba(217, 179, 106, 0.5), rgba(217, 179, 106, 0.08) 30%, transparent 40%, transparent 60%, rgba(217, 179, 106, 0.08) 70%, rgba(217, 179, 106, 0.5));
+  background: linear-gradient(90deg, rgba(217, 179, 106, 0.55), rgba(217, 179, 106, 0.1) 30%, transparent 40%, transparent 60%, rgba(217, 179, 106, 0.1) 70%, rgba(217, 179, 106, 0.55));
   z-index: 0;
 }
 .tabs {
@@ -143,18 +151,19 @@ onBeforeUnmount(() => document.removeEventListener('fullscreenchange', onFs))
   font-size: 16px;
   letter-spacing: 3px;
   color: var(--screen-text-2);
-  background: linear-gradient(180deg, rgba(28, 50, 100, 0.9), rgba(15, 30, 66, 0.9));
-  border: 1px solid rgba(217, 179, 106, 0.25);
+  background: linear-gradient(180deg, rgba(28, 50, 100, 0.92), rgba(15, 30, 66, 0.92));
+  border: 1px solid rgba(217, 179, 106, 0.3);
   clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 10px 100%, 0 50%);
   cursor: pointer;
-  transition: all 0.25s;
+  transition: color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
 }
 .tab:hover {
   color: var(--jin-light);
+  background: linear-gradient(180deg, rgba(40, 66, 124, 0.95), rgba(20, 38, 80, 0.95));
 }
 .tab.active {
   color: #1a1206;
-  background: linear-gradient(180deg, #f3dca3 0%, #d9b36a 55%, #b8904a 100%);
+  background: linear-gradient(180deg, #f6e2ae 0%, #d9b36a 55%, #b8904a 100%);
   border-color: var(--jin-light);
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
 }
@@ -166,7 +175,7 @@ onBeforeUnmount(() => document.removeEventListener('fullscreenchange', onFs))
 
 .title-wrap {
   position: relative;
-  height: 84px;
+  height: 86px;
   text-align: center;
   z-index: 1;
 }
@@ -182,12 +191,27 @@ onBeforeUnmount(() => document.removeEventListener('fullscreenchange', onFs))
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  padding-top: 10px;
+  gap: 12px;
+  padding-top: 9px;
+}
+.logo {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  padding: 2px;
+  background: rgba(255, 246, 230, 0.95);
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(232, 207, 148, 0.8), 0 0 12px rgba(217, 179, 106, 0.35);
 }
 .ornament {
-  font-size: 10px;
-  color: var(--jin);
+  width: 46px;
+  height: 23px;
+  flex-shrink: 0;
+  opacity: 0.85;
+  background: var(--cloud-light) center / contain no-repeat;
+}
+.ornament.left {
+  transform: scaleX(-1);
 }
 h1 {
   margin: 0;
@@ -204,10 +228,10 @@ h1 {
 }
 .subtitle {
   position: relative;
-  margin-top: 2px;
+  margin-top: 1px;
   font-size: 12px;
   letter-spacing: 4px;
-  color: rgba(233, 223, 200, 0.6);
+  color: rgba(233, 223, 200, 0.62);
 }
 
 /* ---------- 内容 ---------- */
@@ -216,5 +240,98 @@ h1 {
   flex: 1;
   min-height: 0;
   padding: 6px 20px 18px;
+}
+
+/* ---------- 中等宽度：顶栏标题收窄 ---------- */
+@media (max-width: 1440px) {
+  .header {
+    grid-template-columns: 1fr 640px 1fr;
+  }
+  h1 {
+    font-size: 30px;
+    letter-spacing: 5px;
+  }
+  .ornament {
+    display: none;
+  }
+  .tab {
+    min-width: 88px;
+    padding: 0 12px;
+    font-size: 15px;
+    letter-spacing: 2px;
+  }
+}
+
+/* ---------- 手机：纵向滚动，标题在上、标签换行 ---------- */
+@media (max-width: 900px) {
+  .screen {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    background-attachment: scroll;
+    background-size: auto, auto, 260% auto;
+  }
+  .header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+    padding: 0 12px 6px;
+  }
+  .header::after {
+    display: none;
+  }
+  .title-wrap {
+    order: -1;
+    height: 70px;
+    margin: 0 -12px;
+  }
+  .title {
+    gap: 8px;
+    padding-top: 8px;
+  }
+  .logo {
+    width: 30px;
+    height: 30px;
+  }
+  h1 {
+    font-size: 20px;
+    letter-spacing: 2px;
+    white-space: nowrap;
+  }
+  .subtitle {
+    font-size: 10px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 28px;
+  }
+  .tabs {
+    padding-top: 10px;
+    gap: 6px;
+  }
+  .tabs.left {
+    justify-content: center;
+  }
+  .tabs.right {
+    justify-content: center;
+    padding-top: 6px;
+  }
+  .tab {
+    flex: 1;
+    min-width: 0;
+    height: 32px;
+    padding: 0 6px;
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+  .tabs.right .tab {
+    flex: 0 1 auto;
+    min-width: 96px;
+  }
+  .main {
+    padding: 8px 12px 16px;
+  }
 }
 </style>

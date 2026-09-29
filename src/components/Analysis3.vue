@@ -201,7 +201,7 @@ export default {
     trendOption() {
       return {
         tooltip: tooltip({ trigger: 'axis' }),
-        grid: { top: 16, bottom: 4, left: 4, right: 12, containLabel: true },
+        grid: { top: 16, bottom: 4, left: 4, right: 28, containLabel: true },
         xAxis: axis({ type: 'category', boundaryGap: false, data: this.trendData.xAxis }),
         yAxis: axis({ type: 'value', axisLine: { show: false } }),
         series: [{
@@ -499,5 +499,61 @@ export default {
   text-align: right;
   font-family: var(--font-num);
   color: var(--jin-light);
+}
+
+/* ---------- 手机：单列纵向排布 ---------- */
+@media (max-width: 900px) {
+  .screen-grid {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    gap: 12px;
+  }
+  .top,
+  .mid,
+  .bottom {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .top > .panel {
+    height: 170px;
+  }
+  .top > .t-mid {
+    height: auto;
+    min-height: 190px;
+  }
+  .mid > .panel,
+  .bottom > .panel {
+    height: 270px;
+  }
+  .bottom > .panel:last-child {
+    height: 330px;
+  }
+  .t-mid :deep(.panel-head small) {
+    display: none;
+  }
+  .digit {
+    width: 30px;
+    height: 42px;
+    font-size: 26px;
+  }
+  .amount {
+    gap: 4px;
+  }
+  .comma {
+    font-size: 22px;
+  }
+  .amount-sub {
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    font-size: 12px;
+  }
+  .tx {
+    overflow-x: auto;
+  }
+  .tx-head,
+  .tx-body {
+    min-width: 520px;
+  }
 }
 </style>
